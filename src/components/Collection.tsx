@@ -2,12 +2,14 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { ArrowRight, ArrowUpRight, Check, Eye, Gift, Plus, ShieldCheck } from "lucide-react";
+import { ArrowRight, Check, Plus } from "lucide-react";
 import { CATEGORIES, PRODUCTS, findProduct, formatPrice, type Product } from "@/data/products";
+import { buttonClass } from "./Button";
 import { ProductModal } from "./ProductView";
 import { useRequestList } from "./RequestList";
+import { SectionHeading } from "./SectionHeading";
 
-/** The Signature Collection: filterable grid, pop-up details, quick add to the Order Request list. */
+/** The Signature Collection: filterable grid, pop-up details, quick add to the order request. */
 export function SignatureCollection() {
   const [cat, setCat] = useState<(typeof CATEGORIES)[number]>("All");
   const [selected, setSelected] = useState<Product | null>(null);
@@ -21,70 +23,69 @@ export function SignatureCollection() {
   };
 
   return (
-    <section id="collection" className="scroll-mt-20 border-b border-line bg-white py-20 md:py-28">
+    <section id="collection" className="py-20 sm:py-28">
       <div className="container-page">
-        <div className="mb-12 flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
-          <div>
-            <p className="flex items-center gap-2 text-[0.72rem] font-semibold tracking-[0.2em] text-gold-deep uppercase">
-              <span className="h-px w-6 bg-gold" /> Official release
-            </p>
-            <h2 className="mt-2 font-serif text-[2.3rem] font-medium tracking-tight text-navy sm:text-[3rem]">The Signature Collection</h2>
-            <p className="mt-2 max-w-xl text-[1rem] text-muted">
-              Designed around the CloudTech identity, for team members, partners and clients who wear the brand into pitches, meetings and conferences.
-            </p>
-          </div>
-          <div className="flex flex-wrap gap-1.5 border border-line bg-mist p-1" role="group" aria-label="Filter by category">
+        <div className="flex flex-col justify-between gap-8 lg:flex-row lg:items-end">
+          <SectionHeading
+            title={
+              <>
+                The Signature <span className="text-brass-accent">Collection.</span>
+              </>
+            }
+            intro="Designed around the CloudTech identity, for team members, partners and clients who wear the brand into pitches, meetings and conferences."
+          />
+          <div className="flex flex-wrap gap-2 lg:shrink-0 lg:flex-nowrap" role="group" aria-label="Filter by category">
             {CATEGORIES.map((c) => (
               <button
                 key={c}
                 type="button"
                 aria-pressed={cat === c}
                 onClick={() => setCat(c)}
-                className={`px-3.5 py-1.5 text-[0.78rem] font-medium whitespace-nowrap transition-colors ${cat === c ? "bg-navy text-white shadow-sm" : "text-slate-600 hover:bg-line hover:text-navy"}`}
+                className={`rounded-full border px-4 py-1.5 text-[0.875rem] whitespace-nowrap transition-colors ${
+                  cat === c ? "border-ink bg-ink text-ivory" : "border-line-strong text-ink hover:border-ink/40"
+                }`}
               >
-                {c === "All" ? "All Pieces" : c}
+                {c === "All" ? "All pieces" : c}
               </button>
             ))}
           </div>
         </div>
 
-        <ul className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+        <ul className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {shown.map((p) => (
             <li key={p.id}>
-              <article className="group flex h-full flex-col overflow-hidden border border-line bg-mist transition-all duration-300 hover:border-gold/60 hover:shadow-lg">
-                <button type="button" onClick={() => setSelected(p)} className="relative aspect-[4/3] overflow-hidden border-b border-line bg-white text-left" aria-label={`View ${p.name}`}>
-                  <Image src={p.images[0].src} alt={p.images[0].alt} fill sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw" className="object-cover transition-transform duration-500 group-hover:scale-105" />
-                  {p.badge && <span className="absolute top-3 left-3 border border-gold/30 bg-navy px-2 py-0.5 text-[0.62rem] font-semibold tracking-[0.1em] text-white uppercase">{p.badge}</span>}
-                  <span className="absolute inset-0 flex items-center justify-center bg-navy/20 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
-                    <span className="inline-flex items-center gap-1.5 bg-white px-3 py-1.5 text-[0.78rem] font-semibold text-navy shadow-md">
-                      <Eye className="h-3.5 w-3.5 text-gold" /> View details
-                    </span>
-                  </span>
+              <article className="group flex h-full flex-col overflow-hidden rounded-2xl border border-line bg-paper transition-colors hover:border-brass/50">
+                <button type="button" onClick={() => setSelected(p)} className="relative aspect-[4/3] overflow-hidden bg-sand text-left" aria-label={`View ${p.name}`}>
+                  <Image src={p.images[0].src} alt={p.images[0].alt} fill sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw" className="object-cover transition-transform duration-700 group-hover:scale-[1.03]" />
+                  {p.badge && <span className="absolute top-3 left-3 rounded-full bg-paper/95 px-3 py-1 text-[0.75rem] font-medium text-brass-dark">{p.badge}</span>}
                 </button>
-                <div className="flex flex-1 flex-col justify-between p-5">
-                  <div>
-                    <div className="mb-1.5 flex items-center justify-between text-[0.72rem]">
-                      <span className="font-medium tracking-[0.14em] text-gold-deep uppercase">{p.category}</span>
-                      {p.category === "Apparel" && p.sizes && p.sizes.length > 1 && <span className="font-mono text-subtle">Sizes {p.sizes[0]}–{p.sizes[p.sizes.length - 1].split(" ")[0]}</span>}
-                    </div>
-                    <h3 className="font-serif text-[1.45rem] leading-tight font-semibold tracking-tight text-navy">
-                      <button type="button" onClick={() => setSelected(p)} className="text-left hover:text-navy-3">
-                        {p.name}
-                      </button>
-                    </h3>
-                    <p className="mt-1 line-clamp-2 text-[0.82rem] leading-relaxed text-muted">{p.subtitle}</p>
-                  </div>
-                  <div className="mt-5 flex items-center justify-between border-t border-line pt-4">
-                    <div>
-                      <span className="block text-[0.62rem] font-medium tracking-[0.14em] text-subtle uppercase">Price</span>
-                      <span className="font-serif text-[1.3rem] font-bold text-navy tabular-nums">{formatPrice(p.price)}</span>
-                    </div>
+                <div className="flex flex-1 flex-col p-6">
+                  <p className="text-[0.75rem] font-medium tracking-[0.16em] text-brass-dark uppercase">{p.category}</p>
+                  <h3 className="mt-2 font-serif text-[1.4rem] leading-tight text-ink">
+                    <button type="button" onClick={() => setSelected(p)} className="text-left hover:text-brass-dark">
+                      {p.name}
+                    </button>
+                  </h3>
+                  <p className="mt-2 line-clamp-2 flex-1 text-[0.9rem] leading-relaxed text-muted">{p.subtitle}</p>
+                  {p.category === "Apparel" && p.sizes && p.sizes.length > 1 && (
+                    <p className="mt-2 text-[0.8rem] text-subtle">
+                      Sizes {p.sizes[0]} to {p.sizes[p.sizes.length - 1].split(" ")[0]}
+                    </p>
+                  )}
+                  <div className="mt-5 flex items-center justify-between gap-3 border-t border-line pt-4">
+                    <span className="text-[1.15rem] font-semibold text-ink tabular-nums">{formatPrice(p.price)}</span>
                     <div className="flex items-center gap-2">
-                      <button type="button" onClick={() => setSelected(p)} className="inline-flex items-center gap-1 border border-line-strong px-3 py-1.5 text-[0.7rem] font-semibold tracking-[0.1em] text-navy uppercase transition-colors hover:border-navy hover:bg-navy hover:text-white">
-                        Details <ArrowUpRight className="h-3 w-3 text-gold" />
+                      <button type="button" onClick={() => setSelected(p)} className="rounded-lg px-3 py-2 text-[0.875rem] font-semibold text-ink hover:bg-sand">
+                        Details
                       </button>
-                      <button type="button" onClick={() => quickAdd(p)} aria-label={`Add ${p.name} to your Order Request list`} title="Add to Order Request" className="bg-navy p-1.5 text-white shadow-sm hover:bg-navy-2">
-                        <Plus className="h-4 w-4 text-gold" />
+                      <button
+                        type="button"
+                        onClick={() => quickAdd(p)}
+                        aria-label={`Add ${p.name} to your Order Request list`}
+                        title="Add to order request"
+                        className="flex h-10 w-10 items-center justify-center rounded-lg bg-brass-button text-on-brass transition-colors hover:bg-brass-button-hover"
+                      >
+                        <Plus aria-hidden className="h-4.5 w-4.5" strokeWidth={2} />
                       </button>
                     </div>
                   </div>
@@ -94,13 +95,13 @@ export function SignatureCollection() {
           ))}
         </ul>
 
-        <div className="mt-14 flex flex-col items-center justify-between gap-4 border border-line bg-mist p-6 md:flex-row">
-          <div className="text-center md:text-left">
-            <h3 className="font-serif text-[1.3rem] font-semibold text-navy">Need items co-branded or personalised for your company?</h3>
-            <p className="mt-0.5 text-[0.85rem] text-muted">We can add names, event logos and co-branding for teams, conferences and client gifts.</p>
+        <div className="mt-10 flex flex-col items-start justify-between gap-5 rounded-2xl border border-line bg-paper p-6 sm:p-8 md:flex-row md:items-center">
+          <div>
+            <h3 className="font-serif text-[1.35rem] text-ink">Need pieces co-branded or personalised?</h3>
+            <p className="mt-1 text-[0.95rem] text-muted">We can add names, event logos and co-branding for teams, conferences and client gifts.</p>
           </div>
-          <a href="#corporate-orders" className="inline-flex items-center gap-2 text-[0.72rem] font-semibold tracking-[0.1em] whitespace-nowrap text-navy uppercase underline decoration-gold underline-offset-4 hover:text-gold-deep">
-            Ask about customisation <ArrowUpRight className="h-3.5 w-3.5" />
+          <a href="#corporate-orders" className={buttonClass("secondary")}>
+            Ask about customisation
           </a>
         </div>
       </div>
@@ -123,58 +124,44 @@ export function CorporateKit() {
   const kit = findProduct("corporate-kit")!;
   const [open, setOpen] = useState(false);
   return (
-    <section id="corporate-kit" className="relative scroll-mt-20 overflow-hidden bg-navy py-20 text-white md:py-28">
-      <div aria-hidden className="pointer-events-none absolute inset-0 opacity-[0.05] [background-image:linear-gradient(#C6A15B_1px,transparent_1px),linear-gradient(90deg,#C6A15B_1px,transparent_1px)] [background-size:60px_60px]" />
-      <div className="container-page relative">
-        <div className="mx-auto mb-16 max-w-3xl text-center">
-          <p className="inline-flex items-center gap-2 text-[0.72rem] font-semibold tracking-[0.2em] text-gold uppercase">
-            <span className="h-px w-8 bg-gold" /> Coordinated set <span className="h-px w-8 bg-gold" />
-          </p>
-          <h2 className="mt-3 font-serif text-[2.3rem] font-medium tracking-tight sm:text-[3.2rem]">The CloudTech Corporate Kit</h2>
-          <p className="mt-3 text-[1.05rem] leading-relaxed text-white/75">For meetings, conferences, client engagements and the people representing CloudTech every day.</p>
-        </div>
-        <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-14">
-          <div>
-            <div className="border border-gold/30 bg-navy-2 p-2.5 shadow-2xl sm:p-4">
-              <div className="relative aspect-[4/3] overflow-hidden">
-                <Image src={kit.images[0].src} alt={kit.images[0].alt} fill sizes="(min-width: 1024px) 45vw, 100vw" className="object-cover transition-transform duration-700 hover:scale-105" />
-              </div>
-              <div className="mt-3.5 flex items-center justify-between border-t border-white/10 px-1 pt-3 text-[0.78rem] text-white/75">
-                <span className="flex items-center gap-2">
-                  <Gift className="h-4 w-4 text-gold" /> <span className="font-medium text-white">Seven-piece set</span>
-                </span>
-                <span className="font-mono text-gold tabular-nums">{formatPrice(kit.price)} per kit</span>
-              </div>
-            </div>
-            <p className="mt-4 flex items-center justify-center gap-2 text-[0.78rem] text-white/60">
-              <ShieldCheck className="h-3.5 w-3.5 text-gold" /> Names on ID cards and co-branding available for team orders
-            </p>
+    <section id="corporate-kit" className="bg-night py-20 text-cream sm:py-28">
+      <div className="container-page grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
+        <figure className="overflow-hidden rounded-2xl border border-cream/12 bg-night-2">
+          <div className="relative aspect-[4/3]">
+            <Image src={kit.images[0].src} alt={kit.images[0].alt} fill sizes="(min-width: 1024px) 45vw, 100vw" className="object-cover" />
           </div>
-          <div>
-            <h3 className="font-serif text-[1.8rem] font-semibold">Made to make an impression</h3>
-            <p className="mt-3 text-[0.92rem] leading-relaxed text-white/75">
-              Every piece carries the CloudTech identity, packed in a navy gift box with a fitted insert: a considered welcome for new team members, key clients and conference
-              delegations.
-            </p>
-            <ul className="mt-6 space-y-3.5">
-              {KIT_CONTENTS.map((k) => (
-                <li key={k.title} className="flex gap-3.5">
-                  <span className="mt-1 flex h-4 w-4 shrink-0 items-center justify-center rounded-full border border-gold bg-gold/20">
-                    <Check className="h-2.5 w-2.5 text-gold" />
-                  </span>
-                  <span>
-                    <span className="block text-[0.9rem] font-semibold tracking-wide">{k.title}</span>
-                    <span className="text-[0.8rem] text-white/60">{k.desc}</span>
-                  </span>
-                </li>
-              ))}
-            </ul>
-            <div className="mt-8 flex flex-col gap-4 border-t border-white/15 pt-6 sm:flex-row sm:items-center">
-              <button type="button" onClick={() => setOpen(true)} className="group inline-flex items-center justify-center gap-2.5 bg-gold px-6 py-3.5 whitespace-nowrap text-[0.75rem] font-semibold tracking-[0.12em] text-navy uppercase shadow-sm hover:bg-[#d4b273]">
-                Request Corporate Kit <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-              </button>
-              <span className="text-[0.8rem] text-white/60">No upfront payment. We&apos;ll come back to you with a quotation.</span>
-            </div>
+          <figcaption className="flex items-center justify-between gap-4 border-t border-cream/12 px-5 py-3.5 text-[0.875rem]">
+            <span className="font-medium text-cream">Seven-piece set</span>
+            <span className="text-brass-light">{formatPrice(kit.price)} per kit</span>
+          </figcaption>
+        </figure>
+
+        <div>
+          <SectionHeading
+            tone="night"
+            title={
+              <>
+                The CloudTech <span className="text-brass-light">Corporate Kit.</span>
+              </>
+            }
+            intro="Every piece carries the CloudTech identity, packed in a gift box with a fitted insert: a considered welcome for new team members, key clients and conference delegations."
+          />
+          <ul className="mt-8 grid gap-x-6 gap-y-4 sm:grid-cols-2">
+            {KIT_CONTENTS.map((k) => (
+              <li key={k.title} className="flex gap-3">
+                <Check aria-hidden className="mt-0.5 h-4.5 w-4.5 shrink-0 text-brass-light" strokeWidth={2} />
+                <span>
+                  <span className="block text-[0.95rem] font-medium text-cream">{k.title}</span>
+                  <span className="text-[0.85rem] text-cream/60">{k.desc}</span>
+                </span>
+              </li>
+            ))}
+          </ul>
+          <div className="mt-10 flex flex-col gap-4 sm:flex-row sm:items-center">
+            <button type="button" onClick={() => setOpen(true)} className={buttonClass("light")}>
+              Request Corporate Kit <ArrowRight aria-hidden className="h-4 w-4 transition-transform group-hover:translate-x-0.5" strokeWidth={1.75} />
+            </button>
+            <span className="text-[0.875rem] text-cream/60">No upfront payment. Names on ID cards and co-branding available.</span>
           </div>
         </div>
       </div>

@@ -3,12 +3,13 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, Minus, Plus, Send, ShieldCheck, ShoppingBag, Sparkles, X } from "lucide-react";
+import { ArrowRight, Minus, Plus, ShieldCheck, ShoppingBag, X } from "lucide-react";
 import { formatPrice, type Product } from "@/data/products";
 import { submitRequest } from "@/lib/supabase";
+import { buttonClass } from "./Button";
 import { useRequestList } from "./RequestList";
-import { Confirmation, ContactFields, FieldShell, inputCls } from "./RequestForms";
-import { Mark } from "./Logo";
+import { Confirmation, ContactFields, FieldShell, FormError, inputCls } from "./RequestForms";
+import { CloudTechMark } from "./Logo";
 
 function Gallery({ product }: { product: Product }) {
   const [i, setI] = useState(0);
@@ -16,15 +17,12 @@ function Gallery({ product }: { product: Product }) {
   const img = product.images[i] ?? product.images[0];
   return (
     <div className="flex flex-col gap-3">
-      <div className="relative aspect-[4/3] overflow-hidden border border-line bg-mist">
+      <div className="relative aspect-[4/3] overflow-hidden rounded-xl border border-line bg-sand">
         {emblem ? (
-          <div className="absolute inset-0 flex flex-col items-center justify-center bg-navy p-6 text-center">
-            <div className="absolute inset-0 opacity-10 [background-image:radial-gradient(#C6A15B_1px,transparent_1px)] [background-size:8px_8px]" />
-            <div className="relative border border-gold/40 bg-navy-2 p-7 shadow-inner">
-              <Mark size={84} tone="dark" />
-            </div>
-            <p className="relative mt-4 text-[0.68rem] font-semibold tracking-[0.2em] text-gold uppercase">The CloudTech mark</p>
-            <p className="relative mt-1 text-[0.8rem] text-white/70">One gold square and four light squares, on every piece</p>
+          <div className="absolute inset-0 flex flex-col items-center justify-center bg-night p-6 text-center">
+            <CloudTechMark tone="reversed" className="h-24 w-24" />
+            <p className="mt-5 font-serif text-[1.2rem] text-cream">The CloudTech mark</p>
+            <p className="mt-1 text-[0.875rem] text-cream/65">One gold square and four light squares, on every piece</p>
           </div>
         ) : (
           <Image key={img.src} src={img.src} alt={img.alt} fill sizes="(min-width: 768px) 45vw, 100vw" className="animate-[fade_0.5s_ease-out] object-cover" priority />
@@ -32,9 +30,9 @@ function Gallery({ product }: { product: Product }) {
         <button
           type="button"
           onClick={() => setEmblem(!emblem)}
-          className="absolute right-3 bottom-3 flex items-center gap-1.5 border border-gold/40 bg-navy px-3 py-1.5 text-[0.72rem] font-medium text-white shadow-md hover:bg-navy-2"
+          className="absolute right-3 bottom-3 flex items-center gap-2 rounded-lg bg-paper/95 px-3 py-2 text-[0.8rem] font-medium text-ink shadow-sm hover:bg-paper"
         >
-          <Sparkles className="h-3.5 w-3.5 text-gold" /> {emblem ? "View product" : "Inspect the logo"}
+          <CloudTechMark className="h-3.5 w-3.5" /> {emblem ? "View product" : "Inspect the logo"}
         </button>
       </div>
       {product.images.length > 1 && (
@@ -46,17 +44,17 @@ function Gallery({ product }: { product: Product }) {
               onClick={() => (setI(j), setEmblem(false))}
               aria-label={`View ${j + 1}: ${im.alt}`}
               aria-pressed={i === j && !emblem}
-              className={`relative h-16 w-20 overflow-hidden border bg-mist ${i === j && !emblem ? "border-navy ring-1 ring-navy" : "border-line hover:border-line-strong"}`}
+              className={`relative h-16 w-20 overflow-hidden rounded-lg border-2 bg-sand ${i === j && !emblem ? "border-brass" : "border-transparent hover:border-line-strong"}`}
             >
               <Image src={im.src} alt="" fill sizes="80px" className="object-cover" />
             </button>
           ))}
         </div>
       )}
-      <div className="border border-line bg-mist p-4 text-[0.82rem] text-muted">
-        <span className="mb-1 block font-semibold text-navy">An official CloudTech Analytics piece</span>
+      <p className="rounded-xl border border-line bg-ivory p-4 text-[0.875rem] leading-relaxed text-muted">
+        <span className="mb-0.5 block font-medium text-ink">An official CloudTech Analytics piece</span>
         Every item carries the CloudTech logo and is made to order for the people who represent CloudTech.
-      </div>
+      </p>
     </div>
   );
 }
@@ -121,14 +119,14 @@ export function ProductView({ product, onClose }: { product: Product; onClose?: 
       <div className="mx-auto max-w-xl">
         <div className="mb-6 flex items-end justify-between gap-4 border-b border-line pb-4">
           <div>
-            <button type="button" onClick={() => setMode("details")} className="mb-1 text-[0.8rem] text-muted underline hover:text-navy">
+            <button type="button" onClick={() => setMode("details")} className="mb-1 text-[0.875rem] text-muted underline underline-offset-2 hover:text-ink">
               ← Back to details
             </button>
-            <h3 className="font-serif text-[1.9rem] font-semibold text-navy">{kit ? "Request the Corporate Kit" : "Request This Item"}</h3>
+            <h3 className="font-serif text-[1.9rem] text-ink">{kit ? "Request the Corporate Kit" : "Request This Item"}</h3>
           </div>
           <div className="text-right">
-            <div className="text-[0.72rem] text-subtle">Estimated total</div>
-            <div className="font-serif text-[1.4rem] font-bold text-navy tabular-nums">{total === null ? "To be confirmed" : formatPrice(total)}</div>
+            <div className="text-[0.8rem] text-subtle">Estimated total</div>
+            <div className="text-[1.25rem] font-semibold text-ink tabular-nums">{total === null ? "To be confirmed" : formatPrice(total)}</div>
           </div>
         </div>
         <form
@@ -138,12 +136,12 @@ export function ProductView({ product, onClose }: { product: Product; onClose?: 
           }}
           className="space-y-4"
         >
-          <div className="flex items-center gap-3 border border-line bg-mist p-3">
-            <div className="relative h-12 w-12 overflow-hidden border border-line bg-white">
+          <div className="flex items-center gap-3 rounded-xl border border-line bg-ivory p-3">
+            <div className="relative h-12 w-12 overflow-hidden rounded-lg bg-sand">
               <Image src={product.images[0].src} alt="" fill sizes="48px" className="object-cover" />
             </div>
-            <div className="text-[0.82rem]">
-              <div className="font-semibold text-navy">{product.name}</div>
+            <div className="text-[0.875rem]">
+              <div className="font-medium text-ink">{product.name}</div>
               <div className="text-muted">
                 Quantity {qty}
                 {size ? ` · Size ${size}` : ""}
@@ -160,11 +158,11 @@ export function ProductView({ product, onClose }: { product: Product; onClose?: 
               className={inputCls}
             />
           </FieldShell>
-          {error && <p className="border border-danger/30 bg-danger/5 px-3 py-2 text-[0.85rem] text-danger">{error}</p>}
-          <button type="submit" disabled={busy} className="flex w-full items-center justify-center gap-2 bg-navy px-6 py-3.5 text-[0.75rem] font-semibold tracking-[0.12em] text-white uppercase hover:bg-navy-2 disabled:opacity-60">
-            <Send className="h-4 w-4 text-gold" /> {busy ? "Sending…" : "Submit Request"}
+          {error && <FormError>{error}</FormError>}
+          <button type="submit" disabled={busy} className={buttonClass("primary", "w-full")}>
+            {busy ? "Sending…" : "Submit Request"}
           </button>
-          <p className="text-center text-[0.78rem] text-muted">No payment now. We&apos;ll contact you to confirm availability, payment and delivery.</p>
+          <p className="text-center text-[0.8rem] text-muted">No payment now. We&apos;ll contact you to confirm availability, payment and delivery.</p>
         </form>
       </div>
     );
@@ -173,26 +171,24 @@ export function ProductView({ product, onClose }: { product: Product; onClose?: 
     <div className="grid gap-8 md:grid-cols-2 lg:gap-10">
       <Gallery product={product} />
       <div className="flex flex-col">
-        <div className="flex items-center gap-3 text-[0.72rem]">
-          <span className="font-semibold tracking-[0.2em] text-gold-deep uppercase">{product.category}</span>
-          {product.badge && <span className="border border-gold/40 bg-navy px-2 py-0.5 font-semibold tracking-[0.1em] text-white uppercase">{product.badge}</span>}
+        <div className="flex items-center gap-3">
+          <span className="text-[0.75rem] font-medium tracking-[0.16em] text-brass-dark uppercase">{product.category}</span>
+          {product.badge && <span className="rounded-full border border-brass/40 px-2.5 py-0.5 text-[0.75rem] font-medium text-brass-dark">{product.badge}</span>}
         </div>
-        <h2 className="mt-2 font-serif text-[2rem] leading-tight font-semibold text-navy sm:text-[2.3rem]">{product.name}</h2>
-        <p className="mt-2 font-serif text-[1.6rem] font-bold text-navy tabular-nums">{formatPrice(product.price)}</p>
-        <p className="mt-4 text-[0.95rem] leading-relaxed text-muted">{product.description}</p>
-        {product.backTreatment && (
-          <p className="mt-3 border-l-2 border-gold pl-3 font-serif text-[1.1rem] text-navy italic">Back: &ldquo;{product.backTreatment}&rdquo;</p>
-        )}
+        <h2 className="mt-3 font-serif text-[2rem] leading-tight tracking-[-0.01em] text-ink sm:text-[2.3rem]">{product.name}</h2>
+        <p className="mt-2 text-[1.5rem] font-semibold text-ink tabular-nums">{formatPrice(product.price)}</p>
+        <p className="mt-4 text-[0.975rem] leading-relaxed text-muted">{product.description}</p>
+        {product.backTreatment && <p className="mt-3 border-l-2 border-brass pl-3 font-serif text-[1.1rem] text-ink">Back: &ldquo;{product.backTreatment}&rdquo;</p>}
 
         {product.colour && (
-          <p className="mt-5 flex items-center gap-2 text-[0.85rem] text-muted">
+          <p className="mt-5 flex items-center gap-2 text-[0.9rem] text-muted">
             <span className="h-4 w-4 rounded-full border border-line-strong" style={{ background: product.colour.hex }} /> {product.colour.name}
           </p>
         )}
 
         {sized && (
-          <fieldset className="mt-5">
-            <legend className="text-[0.7rem] font-semibold tracking-[0.1em] text-navy uppercase">Size</legend>
+          <fieldset className="mt-6">
+            <legend className="text-[0.875rem] font-medium text-ink">Size</legend>
             <div className="mt-2 flex flex-wrap gap-2">
               {product.sizes!.map((s) => (
                 <button
@@ -200,7 +196,7 @@ export function ProductView({ product, onClose }: { product: Product; onClose?: 
                   type="button"
                   aria-pressed={size === s}
                   onClick={() => setSize(s)}
-                  className={`min-w-11 border px-3 py-2 text-[0.82rem] ${size === s ? "border-navy bg-navy text-white" : "border-line-strong text-navy hover:border-navy"}`}
+                  className={`min-w-11 rounded-lg border px-3 py-2 text-[0.875rem] transition-colors ${size === s ? "border-ink bg-ink text-ivory" : "border-line-strong text-ink hover:border-ink/40"}`}
                 >
                   {s}
                 </button>
@@ -210,16 +206,16 @@ export function ProductView({ product, onClose }: { product: Product; onClose?: 
         )}
 
         <div className="mt-5 flex flex-wrap items-center gap-4">
-          <div className="inline-flex items-center border border-line-strong" role="group" aria-label="Quantity">
-            <button type="button" aria-label="Fewer" disabled={qty <= 1} onClick={() => setQty(qty - 1)} className="p-3 text-navy disabled:opacity-30">
+          <div className="inline-flex items-center rounded-lg border border-line-strong" role="group" aria-label="Quantity">
+            <button type="button" aria-label="Fewer" disabled={qty <= 1} onClick={() => setQty(qty - 1)} className="p-3 text-ink disabled:opacity-30">
               <Minus className="h-4 w-4" />
             </button>
-            <span className="w-10 text-center font-mono">{qty}</span>
-            <button type="button" aria-label="More" onClick={() => setQty(Math.min(500, qty + 1))} className="p-3 text-navy">
+            <span className="w-10 text-center tabular-nums">{qty}</span>
+            <button type="button" aria-label="More" onClick={() => setQty(Math.min(500, qty + 1))} className="p-3 text-ink">
               <Plus className="h-4 w-4" />
             </button>
           </div>
-          {total !== null && qty > 1 && <span className="text-[0.85rem] text-muted">Estimated {formatPrice(total)}</span>}
+          {total !== null && qty > 1 && <span className="text-[0.9rem] text-muted">Estimated {formatPrice(total)}</span>}
         </div>
 
         <div className="mt-6 grid gap-3 sm:grid-cols-2">
@@ -230,38 +226,38 @@ export function ProductView({ product, onClose }: { product: Product; onClose?: 
               toast(`Added ${product.name}${qty > 1 ? ` (${qty})` : ""} to your Order Request list.`);
               onClose?.();
             }}
-            className="flex items-center justify-center gap-2 border border-navy px-5 py-3.5 text-[0.72rem] font-semibold tracking-[0.12em] text-navy uppercase hover:bg-mist"
+            className={buttonClass("secondary")}
           >
-            <ShoppingBag className="h-4 w-4 text-gold" /> Add to Order Request
+            <ShoppingBag aria-hidden className="h-4 w-4" strokeWidth={1.75} /> Add to Order Request
           </button>
-          <button type="button" onClick={() => setMode("form")} className="group flex items-center justify-center gap-2 bg-navy px-5 py-3.5 text-[0.72rem] font-semibold tracking-[0.12em] text-white uppercase hover:bg-navy-2">
-            {kit ? "Request Corporate Kit" : "Request This Item"} <ArrowRight className="h-4 w-4 text-gold transition-transform group-hover:translate-x-0.5" />
+          <button type="button" onClick={() => setMode("form")} className={buttonClass("primary")}>
+            {kit ? "Request Corporate Kit" : "Request This Item"} <ArrowRight aria-hidden className="h-4 w-4 transition-transform group-hover:translate-x-0.5" strokeWidth={1.75} />
           </button>
         </div>
-        <p className="mt-3 flex items-center gap-1.5 text-[0.78rem] text-muted">
-          <ShieldCheck className="h-3.5 w-3.5 text-gold" /> No payment now. We confirm availability, payment and delivery with you.
+        <p className="mt-3 flex items-center gap-1.5 text-[0.85rem] text-muted">
+          <ShieldCheck aria-hidden className="h-4 w-4 text-brass-dark" strokeWidth={1.75} /> No payment now. We confirm availability, payment and delivery with you.
         </p>
 
         <div className="mt-8 border-t border-line pt-6">
-          <h3 className="text-[0.7rem] font-semibold tracking-[0.16em] text-navy uppercase">{kit ? "What's in the box" : "Details"}</h3>
-          <ul className="mt-3 space-y-1.5 text-[0.88rem] text-ink">
+          <h3 className="font-serif text-[1.2rem] text-ink">{kit ? "What's in the box" : "Details"}</h3>
+          <ul className="mt-3 space-y-2 text-[0.925rem] text-ink-soft">
             {product.details.map((d) => (
               <li key={d} className="flex gap-2.5">
-                <span aria-hidden className="mt-2.5 h-px w-3 shrink-0 bg-gold" />
+                <span aria-hidden className="mt-2.5 h-px w-3 shrink-0 bg-brass" />
                 {d}
               </li>
             ))}
           </ul>
-          <dl className="mt-5 divide-y divide-line border-y border-line text-[0.85rem]">
+          <dl className="mt-5 divide-y divide-line border-y border-line text-[0.9rem]">
             {Object.entries(product.specifications).map(([k, v]) => (
-              <div key={k} className="grid grid-cols-[8.5rem_1fr] gap-3 py-2">
+              <div key={k} className="grid grid-cols-[8.5rem_1fr] gap-3 py-2.5">
                 <dt className="text-subtle">{k}</dt>
                 <dd className="text-ink">{v}</dd>
               </div>
             ))}
           </dl>
           {onClose && (
-            <Link href={`/collection/${product.slug}`} className="mt-4 inline-block text-[0.75rem] font-semibold tracking-[0.1em] text-navy uppercase underline decoration-gold underline-offset-4">
+            <Link href={`/collection/${product.slug}`} className="mt-4 inline-flex items-center gap-1.5 text-[0.875rem] font-semibold text-ink underline decoration-line-strong underline-offset-4 hover:text-brass-dark hover:decoration-brass">
               Open the product page
             </Link>
           )}
@@ -285,10 +281,10 @@ export function ProductModal({ product, onClose }: { product: Product | null; on
   }, [product, onClose]);
   if (!product) return null;
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-navy/70 p-3 backdrop-blur-[2px] sm:items-center sm:p-6" onClick={onClose}>
-      <div role="dialog" aria-modal="true" aria-label={product.name} className="relative w-full max-w-5xl animate-[fade_0.2s_ease-out] border border-line bg-white shadow-2xl" onClick={(e) => e.stopPropagation()}>
-        <button type="button" onClick={onClose} aria-label="Close" className="absolute top-3 right-3 z-10 rounded-full bg-white/90 p-2 text-muted hover:bg-mist hover:text-navy">
-          <X className="h-5 w-5" />
+    <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-night/60 p-3 backdrop-blur-[2px] sm:items-center sm:p-6" onClick={onClose}>
+      <div role="dialog" aria-modal="true" aria-label={product.name} className="relative w-full max-w-5xl animate-[fade_0.2s_ease-out] rounded-2xl border border-line bg-paper text-ink shadow-2xl" onClick={(e) => e.stopPropagation()}>
+        <button type="button" onClick={onClose} aria-label="Close" className="absolute top-3 right-3 z-10 flex h-10 w-10 items-center justify-center rounded-lg bg-paper/90 text-muted hover:bg-sand hover:text-ink">
+          <X className="h-5 w-5" strokeWidth={1.75} />
         </button>
         <div className="max-h-[92vh] overflow-y-auto p-5 sm:p-8">
           <ProductView key={product.slug} product={product} onClose={onClose} />

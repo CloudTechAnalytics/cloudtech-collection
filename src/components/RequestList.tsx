@@ -3,10 +3,11 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, useSyncExternalStore, type ReactNode } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Check, Minus, Plus, Send, ShoppingBag, Trash2, X } from "lucide-react";
+import { Check, Minus, Plus, ShoppingBag, Trash2, X } from "lucide-react";
 import { PRODUCTS, findProduct, formatPrice } from "@/data/products";
 import { submitRequest } from "@/lib/supabase";
-import { ContactFields, Confirmation, FieldShell, inputCls } from "./RequestForms";
+import { buttonClass } from "./Button";
+import { ContactFields, Confirmation, FieldShell, FormError, inputCls } from "./RequestForms";
 
 export type ListItem = { slug: string; quantity: number; size?: string };
 
@@ -99,12 +100,12 @@ export function RequestListProvider({ children }: { children: ReactNode }) {
       {children}
       {drawer && <Drawer onClose={() => setDrawer(false)} />}
       {message && (
-        <div role="status" className="fixed right-4 bottom-4 left-4 z-[60] flex items-center gap-3 border border-gold/50 bg-navy px-4 py-3 text-[0.85rem] text-white shadow-xl sm:left-auto sm:max-w-md">
-          <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-gold text-navy">
+        <div role="status" className="fixed right-4 bottom-4 left-4 z-[60] flex items-center gap-3 rounded-xl bg-night px-4 py-3 text-[0.9rem] text-cream shadow-xl sm:left-auto sm:max-w-md">
+          <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-brass-light text-night">
             <Check className="h-3 w-3" />
           </span>
           <span className="flex-1">{message}</span>
-          <button type="button" onClick={() => (setMessage(null), setDrawer(true))} className="font-semibold text-gold hover:underline">
+          <button type="button" onClick={() => (setMessage(null), setDrawer(true))} className="font-semibold whitespace-nowrap text-brass-light hover:underline">
             View list
           </button>
         </div>
@@ -154,15 +155,15 @@ function Drawer({ onClose }: { onClose: () => void }) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex justify-end bg-navy/60 backdrop-blur-[2px]" onClick={onClose}>
-      <aside role="dialog" aria-modal="true" aria-label="Order Request list" className="flex h-full w-full max-w-md animate-[slide-in_0.25s_ease-out] flex-col bg-white shadow-2xl" onClick={(e) => e.stopPropagation()}>
-        <header className="flex items-center justify-between border-b border-line bg-mist px-5 py-4">
+    <div className="fixed inset-0 z-50 flex justify-end bg-night/60 backdrop-blur-[2px]" onClick={onClose}>
+      <aside role="dialog" aria-modal="true" aria-label="Order Request list" className="flex h-full w-full max-w-md animate-[slide-in_0.25s_ease-out] flex-col bg-paper text-ink shadow-2xl" onClick={(e) => e.stopPropagation()}>
+        <header className="flex items-center justify-between border-b border-line px-5 py-4">
           <div className="flex items-center gap-2.5">
-            <ShoppingBag className="h-5 w-5 text-gold" />
-            <h2 className="font-serif text-[1.4rem] font-semibold text-navy">Order Request List</h2>
-            {count > 0 && step !== "done" && <span className="rounded-full bg-navy px-2 py-0.5 font-mono text-[0.72rem] text-white">{count}</span>}
+            <ShoppingBag aria-hidden className="h-5 w-5 text-brass-dark" strokeWidth={1.75} />
+            <h2 className="font-serif text-[1.4rem] text-ink">Order Request List</h2>
+            {count > 0 && step !== "done" && <span className="rounded-full bg-brass-pale px-2 py-0.5 text-[0.75rem] font-semibold text-brass-dark tabular-nums">{count}</span>}
           </div>
-          <button type="button" onClick={onClose} aria-label="Close" className="p-1.5 text-subtle hover:text-navy">
+          <button type="button" onClick={onClose} aria-label="Close" className="flex h-9 w-9 items-center justify-center rounded-lg text-muted hover:bg-sand hover:text-ink">
             <X className="h-5 w-5" />
           </button>
         </header>
@@ -173,9 +174,9 @@ function Drawer({ onClose }: { onClose: () => void }) {
           ) : rows.length === 0 ? (
             <div className="py-14 text-center">
               <ShoppingBag className="mx-auto h-9 w-9 text-line-strong" />
-              <p className="mt-4 font-serif text-[1.35rem] text-navy">Your list is empty</p>
-              <p className="mt-1 text-[0.88rem] text-muted">Add pieces from the collection, then send one request for all of them.</p>
-              <Link href="/#collection" onClick={onClose} className="mt-6 inline-block text-[0.78rem] font-semibold tracking-[0.12em] text-navy uppercase underline decoration-gold underline-offset-4">
+              <p className="mt-4 font-serif text-[1.35rem] text-ink">Your list is empty</p>
+              <p className="mt-1 text-[0.9rem] text-muted">Add pieces from the collection, then send one request for all of them.</p>
+              <Link href="/#collection" onClick={onClose} className={buttonClass("secondary", "mt-6")}>
                 Browse the collection
               </Link>
             </div>
@@ -183,22 +184,22 @@ function Drawer({ onClose }: { onClose: () => void }) {
             <ul className="divide-y divide-line">
               {rows.map((r) => (
                 <li key={`${r.slug}-${r.size ?? ""}`} className="flex gap-3.5 py-4 first:pt-0">
-                  <div className="relative h-16 w-16 shrink-0 overflow-hidden border border-line bg-mist">
+                  <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-lg bg-sand">
                     <Image src={r.product.images[0].src} alt="" fill sizes="64px" className="object-cover" />
                   </div>
                   <div className="min-w-0 flex-1">
-                    <p className="font-serif text-[1.08rem] leading-tight font-semibold text-navy">{r.product.name}</p>
-                    <p className="mt-0.5 text-[0.78rem] text-muted">
+                    <p className="font-serif text-[1.08rem] leading-tight text-ink">{r.product.name}</p>
+                    <p className="mt-0.5 text-[0.85rem] text-muted">
                       {r.size ? `Size ${r.size} · ` : ""}
                       {formatPrice(r.product.price)}
                     </p>
                     <div className="mt-2 flex items-center justify-between">
-                      <div className="inline-flex items-center border border-line-strong">
-                        <button type="button" aria-label="Fewer" disabled={r.quantity <= 1} onClick={() => update(r.slug, r.size, r.quantity - 1)} className="p-1.5 text-navy disabled:opacity-30">
+                      <div className="inline-flex items-center rounded-lg border border-line-strong">
+                        <button type="button" aria-label="Fewer" disabled={r.quantity <= 1} onClick={() => update(r.slug, r.size, r.quantity - 1)} className="p-1.5 text-ink disabled:opacity-30">
                           <Minus className="h-3.5 w-3.5" />
                         </button>
-                        <span className="w-8 text-center font-mono text-[0.82rem]">{r.quantity}</span>
-                        <button type="button" aria-label="More" onClick={() => update(r.slug, r.size, r.quantity + 1)} className="p-1.5 text-navy">
+                        <span className="w-8 text-center text-[0.875rem] tabular-nums">{r.quantity}</span>
+                        <button type="button" aria-label="More" onClick={() => update(r.slug, r.size, r.quantity + 1)} className="p-1.5 text-ink">
                           <Plus className="h-3.5 w-3.5" />
                         </button>
                       </div>
@@ -218,31 +219,31 @@ function Drawer({ onClose }: { onClose: () => void }) {
               }}
               className="space-y-4"
             >
-              <button type="button" onClick={() => setStep("list")} className="text-[0.8rem] text-muted underline hover:text-navy">
+              <button type="button" onClick={() => setStep("list")} className="text-[0.875rem] text-muted underline underline-offset-2 hover:text-ink">
                 ← Back to your list
               </button>
-              <h3 className="font-serif text-[1.4rem] font-semibold text-navy">Delivery and contact details</h3>
+              <h3 className="font-serif text-[1.4rem] text-ink">Delivery and contact details</h3>
               <ContactFields />
               <FieldShell label="Notes" optional>
                 <textarea name="message" rows={3} maxLength={4000} placeholder="Delivery window, company invoice details, names for ID cards…" className={inputCls} />
               </FieldShell>
-              {error && <p className="border border-danger/30 bg-danger/5 px-3 py-2 text-[0.85rem] text-danger">{error}</p>}
-              <button type="submit" disabled={busy} className="flex w-full items-center justify-center gap-2 bg-navy px-6 py-3.5 text-[0.75rem] font-semibold tracking-[0.12em] text-white uppercase hover:bg-navy-2 disabled:opacity-60">
-                <Send className="h-4 w-4 text-gold" /> {busy ? "Sending…" : "Send Order Request"}
+              {error && <FormError>{error}</FormError>}
+              <button type="submit" disabled={busy} className={buttonClass("primary", "w-full")}>
+                {busy ? "Sending…" : "Send Order Request"}
               </button>
-              <p className="text-center text-[0.78rem] text-muted">No payment now. We&apos;ll contact you to confirm availability, payment and delivery.</p>
+              <p className="text-center text-[0.8rem] text-muted">No payment now. We&apos;ll contact you to confirm availability, payment and delivery.</p>
             </form>
           )}
         </div>
 
         {step === "list" && rows.length > 0 && (
-          <footer className="border-t border-line bg-mist p-5">
+          <footer className="border-t border-line bg-ivory p-5">
             <div className="flex items-baseline justify-between">
-              <span className="text-[0.75rem] tracking-[0.12em] text-muted uppercase">Estimated total</span>
-              <span className="font-serif text-[1.5rem] font-bold text-navy tabular-nums">{total === null ? "To be confirmed" : formatPrice(total)}</span>
+              <span className="text-[0.875rem] text-muted">Estimated total</span>
+              <span className="text-[1.35rem] font-semibold text-ink tabular-nums">{total === null ? "To be confirmed" : formatPrice(total)}</span>
             </div>
-            <p className="mt-1 text-[0.75rem] text-subtle">Final price and delivery confirmed by CloudTech before you pay.</p>
-            <button type="button" onClick={() => setStep("form")} className="mt-4 flex w-full items-center justify-center gap-2 bg-navy px-6 py-3.5 text-[0.75rem] font-semibold tracking-[0.12em] text-white uppercase hover:bg-navy-2">
+            <p className="mt-1 text-[0.8rem] text-subtle">Final price and delivery confirmed by CloudTech before you pay.</p>
+            <button type="button" onClick={() => setStep("form")} className={buttonClass("primary", "mt-4 w-full")}>
               Continue to details
             </button>
           </footer>

@@ -24,12 +24,14 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
   const product = findProduct((await params).slug);
   if (!product) notFound();
   return (
-    <section className="bg-white pt-28 pb-20 md:pt-32">
+    <section className="pt-8 pb-20 sm:pt-12">
       <div className="container-page">
-        <Link href="/#collection" className="mb-6 inline-flex items-center gap-1 text-[0.75rem] font-semibold tracking-[0.1em] text-muted uppercase hover:text-navy">
+        <Link href="/#collection" className="mb-6 inline-flex items-center gap-1 text-[0.875rem] font-medium text-muted hover:text-ink">
           <ChevronLeft className="h-4 w-4" /> The Signature Collection
         </Link>
-        <ProductView product={product} />
+        <div className="rounded-2xl border border-line bg-paper p-5 sm:p-8">
+          <ProductView product={product} />
+        </div>
       </div>
     </section>
   );

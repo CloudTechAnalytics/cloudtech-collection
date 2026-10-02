@@ -50,8 +50,8 @@ function SignIn({ onDone }: { onDone: () => void }) {
   };
   return (
     <section className="container-page max-w-md py-20">
-      <p className="eyebrow">CloudTech Collection</p>
-      <h1 className="display mt-4 text-[2.6rem] text-navy">Requests</h1>
+      <p className="kicker">CloudTech Collection</p>
+      <h1 className="mt-4 font-serif text-[2.6rem] text-ink">Requests</h1>
       <p className="mt-3 text-muted">Sign in with your CloudTech Academy admin account.</p>
       <form onSubmit={submit} className="mt-8 space-y-5">
         <Field label="Email" name="email" type="email" required autoComplete="email" />
@@ -91,15 +91,15 @@ function RequestRow({ r, onSaved, onDeleted }: { r: Req; onSaved: (r: Req) => vo
       : [r.quantity ? `${r.quantity} items` : "", r.products.join(", ")].filter(Boolean).join(" · ");
   const reply = encodeURIComponent(`Hello ${r.name.split(" ")[0]}, thank you for your CloudTech Collection request ${r.reference}.`);
   return (
-    <li className="border border-line bg-white">
+    <li className="overflow-hidden rounded-xl border border-line bg-paper">
       <button type="button" onClick={() => setOpen(!open)} aria-expanded={open} className="flex w-full flex-col gap-2 p-5 text-left sm:flex-row sm:items-center sm:justify-between">
         <span className="min-w-0">
           <span className="flex flex-wrap items-center gap-2">
-            <span className="font-mono text-[0.85rem] text-navy">{r.reference}</span>
-            <span className="border border-line px-2 py-0.5 text-[0.68rem] font-semibold tracking-[0.12em] text-muted uppercase">{KIND_LABEL[r.kind]}</span>
-            {r.status === "new" && <span className="bg-gold px-2 py-0.5 text-[0.68rem] font-semibold tracking-[0.12em] text-navy uppercase">New</span>}
+            <span className="font-mono text-[0.85rem] text-ink">{r.reference}</span>
+            <span className="rounded-full border border-line-strong px-2.5 py-0.5 text-[0.75rem] font-medium text-muted">{KIND_LABEL[r.kind]}</span>
+            {r.status === "new" && <span className="rounded-full bg-brass-pale px-2.5 py-0.5 text-[0.75rem] font-semibold text-brass-dark">New</span>}
           </span>
-          <span className="mt-1 block font-semibold text-navy">
+          <span className="mt-1 block font-semibold text-ink">
             {r.name}
             {r.organization && <span className="font-normal text-muted"> · {r.organization}</span>}
           </span>
@@ -111,28 +111,28 @@ function RequestRow({ r, onSaved, onDeleted }: { r: Req; onSaved: (r: Req) => vo
         <div className="grid gap-6 border-t border-line p-5 lg:grid-cols-[1fr_18rem]">
           <dl className="grid gap-x-6 gap-y-3 text-[0.94rem] sm:grid-cols-2">
             <div>
-              <dt className="text-[0.75rem] tracking-[0.1em] text-subtle uppercase">Email</dt>
+              <dt className="text-[0.8rem] text-subtle">Email</dt>
               <dd className="break-all">{r.email}</dd>
             </div>
             <div>
-              <dt className="text-[0.75rem] tracking-[0.1em] text-subtle uppercase">Phone</dt>
+              <dt className="text-[0.8rem] text-subtle">Phone</dt>
               <dd>{r.phone || "Not given"}</dd>
             </div>
             <div>
-              <dt className="text-[0.75rem] tracking-[0.1em] text-subtle uppercase">Delivery</dt>
+              <dt className="text-[0.8rem] text-subtle">Delivery</dt>
               <dd>{r.location || "Not given"}</dd>
             </div>
             <div>
-              <dt className="text-[0.75rem] tracking-[0.1em] text-subtle uppercase">Date needed</dt>
+              <dt className="text-[0.8rem] text-subtle">Date needed</dt>
               <dd>{r.event_date ? new Date(r.event_date).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" }) : "Not given"}</dd>
             </div>
             <div className="sm:col-span-2">
-              <dt className="text-[0.75rem] tracking-[0.1em] text-subtle uppercase">Request</dt>
+              <dt className="text-[0.8rem] text-subtle">Request</dt>
               <dd>{summary || "None"}</dd>
             </div>
             {r.message && (
               <div className="sm:col-span-2">
-                <dt className="text-[0.75rem] tracking-[0.1em] text-subtle uppercase">Message</dt>
+                <dt className="text-[0.8rem] text-subtle">Message</dt>
                 <dd className="whitespace-pre-wrap">{r.message}</dd>
               </div>
             )}
@@ -148,9 +148,9 @@ function RequestRow({ r, onSaved, onDeleted }: { r: Req; onSaved: (r: Req) => vo
                 </a>
               )}
             </div>
-            <label className="block text-[0.75rem] font-semibold tracking-[0.1em] text-navy uppercase">
+            <label className="block text-[0.875rem] font-medium text-ink">
               Status
-              <select value={r.status} disabled={saving} onChange={(e) => save({ status: e.target.value as Status })} className="mt-2 block w-full border border-line-strong bg-white px-3 py-2.5 text-[0.95rem] font-normal tracking-normal normal-case">
+              <select value={r.status} disabled={saving} onChange={(e) => save({ status: e.target.value as Status })} className="mt-2 block w-full rounded-lg border border-line-strong bg-paper px-3 py-2.5 text-[0.95rem] font-normal text-ink">
                 {STATUSES.map((s) => (
                   <option key={s} value={s}>
                     {s[0].toUpperCase() + s.slice(1)}
@@ -158,23 +158,23 @@ function RequestRow({ r, onSaved, onDeleted }: { r: Req; onSaved: (r: Req) => vo
                 ))}
               </select>
             </label>
-            <label className="block text-[0.75rem] font-semibold tracking-[0.1em] text-navy uppercase">
+            <label className="block text-[0.875rem] font-medium text-ink">
               Internal note
-              <textarea value={note} onChange={(e) => setNote(e.target.value)} rows={3} className="mt-2 block w-full border border-line-strong px-3 py-2 text-[0.95rem] font-normal tracking-normal normal-case" />
+              <textarea value={note} onChange={(e) => setNote(e.target.value)} rows={3} className="mt-2 block w-full rounded-lg border border-line-strong bg-paper px-3 py-2 text-[0.95rem] font-normal text-ink" />
             </label>
             {note !== r.admin_note && (
-              <button type="button" onClick={() => save({ admin_note: note })} disabled={saving} className={buttonClass("primary", "w-full px-3 py-2.5")}>
+              <button type="button" onClick={() => save({ admin_note: note })} disabled={saving} className={buttonClass("primary", "w-full")}>
                 Save note
               </button>
             )}
             <div className="border-t border-line pt-4">
               {confirming ? (
                 <div className="space-y-2">
-                  <p className="text-[0.88rem] text-navy">
+                  <p className="text-[0.9rem] text-ink">
                     Delete <span className="font-mono">{r.reference}</span> for good? This can&apos;t be undone.
                   </p>
                   <div className="flex gap-2">
-                    <button type="button" onClick={() => void remove()} disabled={saving} className="flex-1 bg-danger px-3 py-2 text-[0.85rem] font-semibold text-white disabled:opacity-60">
+                    <button type="button" onClick={() => void remove()} disabled={saving} className="flex-1 rounded-lg bg-[#9b2c1f] px-3 py-2 text-[0.875rem] font-semibold text-white disabled:opacity-60">
                       {saving ? "Deleting…" : "Yes, delete"}
                     </button>
                     <button type="button" onClick={() => setConfirming(false)} disabled={saving} className={buttonClass("outline", "flex-1 px-3 py-2")}>
@@ -242,7 +242,7 @@ export function AdminRequests() {
   if (isAdmin === false)
     return (
       <section className="container-page max-w-lg py-20">
-        <h1 className="display text-[2.4rem] text-navy">Admins only</h1>
+        <h1 className="font-serif text-[2.4rem] text-ink">Admins only</h1>
         <p className="mt-3 text-muted">{session.user.email} isn&apos;t a CloudTech admin account.</p>
         <button type="button" onClick={signOut} className={buttonClass("outline", "mt-6")}>
           Sign out
@@ -262,12 +262,12 @@ export function AdminRequests() {
   };
 
   return (
-    <section className="bg-mist">
+    <section>
       <div className="container-page py-12">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <p className="eyebrow">CloudTech Collection</p>
-            <h1 className="display mt-3 text-[2.8rem] text-navy">Requests</h1>
+            <p className="kicker">CloudTech Collection</p>
+            <h1 className="mt-3 font-serif text-[2.8rem] text-ink">Requests</h1>
             <p className="mt-1 text-muted">
               {counts.new} new · {open.length} open · {rows.length} in total
             </p>
@@ -291,7 +291,7 @@ export function AdminRequests() {
               type="button"
               aria-pressed={filter === f}
               onClick={() => setFilter(f)}
-              className={`border px-3 py-1.5 text-[0.8rem] font-medium capitalize ${filter === f ? "border-navy bg-navy text-white" : "border-line-strong bg-white text-navy"}`}
+              className={`rounded-full border px-3.5 py-1.5 text-[0.85rem] capitalize ${filter === f ? "border-ink bg-ink text-ivory" : "border-line-strong text-ink hover:border-ink/40"}`}
             >
               {f} ({f === "all" ? rows.length : f === "open" ? open.length : counts[f]})
             </button>

@@ -1,178 +1,155 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowDown, ArrowRight, ArrowUpRight, Award, BarChart3, ChevronDown, Cpu, GraduationCap, HelpCircle, Layers, Mail, MapPin, MessageCircle, Scale, Sparkles, Truck } from "lucide-react";
+import { ArrowUpRight, Minus, Plus } from "lucide-react";
 import { FAQ } from "@/data/products";
 import { ECOSYSTEM, SITE, whatsappLink } from "@/lib/site";
-import { Logo, Mark } from "./Logo";
+import { ButtonLink } from "./Button";
+import { CloudTechLogo, CloudTechMark, ProductMark } from "./Logo";
+import { SectionHeading } from "./SectionHeading";
 
 export function Hero() {
   return (
-    <section className="relative overflow-hidden border-b border-line bg-mist pt-28 pb-16 md:pt-36 md:pb-20">
-      <div className="container-page grid items-center gap-12 lg:grid-cols-12 lg:gap-14">
+    <section aria-labelledby="hero-title" className="relative overflow-hidden">
+      <div className="container-page grid items-center gap-12 pt-12 pb-20 sm:pt-16 lg:grid-cols-12 lg:gap-14 lg:pt-20 lg:pb-28">
         <div className="lg:col-span-6">
-          <p className="mb-4 flex flex-wrap items-center gap-2.5 text-[0.72rem] font-medium tracking-[0.2em] text-muted uppercase">
-            <Mark size={16} />
-            <span>CloudTech Analytics</span>
-            <span className="text-gold" aria-hidden>•</span>
-            <span>Academy</span>
-            <span className="text-gold" aria-hidden>•</span>
-            <span>Community</span>
+          <p className="kicker flex items-center gap-2.5">
+            <CloudTechMark tone="brass" className="h-4 w-4" />
+            The official CloudTech Collection
           </p>
-          <h1 className="font-serif text-[2.9rem] leading-[1.06] font-medium tracking-tight text-navy sm:text-[3.6rem] lg:text-[4.3rem]">
-            Wear the brand.
-            <br />
-            <span className="font-normal text-gold-deep italic">Carry the idea.</span>
+          <h1 id="hero-title" className="mt-6 font-serif text-[2.6rem] leading-[1.08] font-medium tracking-[-0.015em] text-ink min-[400px]:text-[2.9rem] sm:text-[3.3rem] xl:text-[3.6rem]">
+            Wear the brand. Carry the <span className="text-brass-accent">idea.</span>
           </h1>
-          <p className="mt-6 max-w-xl text-[1.05rem] leading-relaxed text-muted sm:text-[1.15rem]">
-            The official CloudTech Collection: premium merchandise for the people behind the work, the ideas and the impact. Made for boardrooms, keynotes and every day you
-            represent the brand.
+          <p className="mt-6 max-w-xl text-[1.0625rem] leading-relaxed text-muted sm:text-[1.1875rem]">
+            Polos, tees, caps, journals and gift kits carrying the CloudTech logo, for the people who work with us, learn with us and build with us.
           </p>
-          <div className="mt-8 flex flex-wrap items-center gap-4">
-            <a href="#collection" className="group inline-flex items-center gap-2.5 bg-navy px-6 py-3.5 text-[0.75rem] font-semibold tracking-[0.12em] text-white uppercase shadow-sm hover:bg-navy-2">
-              Explore Collection <ArrowRight className="h-4 w-4 text-gold transition-transform group-hover:translate-x-1" />
-            </a>
-            <a href="#corporate-orders" className="inline-flex items-center border border-line-strong bg-white px-6 py-3.5 text-[0.75rem] font-semibold tracking-[0.12em] text-navy uppercase hover:border-gold">
-              Corporate Orders
-            </a>
+          <div className="mt-9 flex flex-col gap-3 sm:flex-row">
+            <ButtonLink href="/#collection" arrow>
+              Explore the collection
+            </ButtonLink>
+            <ButtonLink href="/#corporate-orders" variant="secondary">
+              Corporate orders
+            </ButtonLink>
           </div>
-          <div className="mt-10 flex flex-wrap gap-x-6 gap-y-2 border-t border-line pt-6 text-[0.8rem] text-muted">
-            <span>
-              <strong className="font-semibold text-ink">Request, don&apos;t checkout:</strong> we confirm price, payment and delivery with you
-            </span>
-            <span className="hidden text-line-strong sm:inline">/</span>
-            <span>
-              <strong className="font-semibold text-ink">Teams and events:</strong> kits, co-branding and bulk orders
-            </span>
-          </div>
+          <p className="mt-5 text-[0.875rem] text-subtle">No checkout: send a request and we confirm price, payment and delivery with you.</p>
         </div>
 
-        <div className="relative lg:col-span-6">
-          <div className="relative border border-line bg-white p-2 shadow-xl sm:p-3">
-            <span aria-hidden className="pointer-events-none absolute -top-1 -right-1 h-8 w-8 border-t-2 border-r-2 border-gold" />
-            <span aria-hidden className="pointer-events-none absolute -bottom-1 -left-1 h-8 w-8 border-b-2 border-l-2 border-gold" />
-            <div className="relative aspect-[16/10] overflow-hidden bg-mist">
+        <div className="lg:col-span-6">
+          <figure className="overflow-hidden rounded-2xl border border-line bg-paper shadow-[0_24px_60px_-30px_rgba(23,23,23,0.35)]">
+            <div className="relative aspect-[16/10]">
               <Image
                 src="/products/collection-flatlay.jpg"
                 alt="The CloudTech Collection: navy polo, white tee, cap, hardcover journal, pen, bottle and presentation box, all with the CloudTech logo"
                 fill
                 priority
                 sizes="(min-width: 1024px) 50vw, 100vw"
-                className="object-cover transition-transform duration-700 hover:scale-[1.02]"
+                className="object-cover"
               />
             </div>
-            <div className="mt-3 flex items-center justify-between gap-4 border-t border-line px-1 pt-3 text-[0.78rem] text-muted sm:justify-end">
-              <span className="flex items-center gap-2">
-                <span className="h-1.5 w-1.5 rounded-full bg-gold" />
-                <span className="font-medium text-navy">The Signature Collection</span>
-                <span className="hidden text-subtle sm:inline">· Navy, white and gold</span>
-              </span>
-              <span className="font-mono text-subtle tabular-nums">2026 Edition</span>
-            </div>
-          </div>
-          <div className="absolute -bottom-6 -left-6 hidden max-w-xs border border-gold/30 bg-navy p-4 text-white shadow-lg sm:block">
-            <p className="mb-2 flex items-center gap-2 text-[0.68rem] font-medium tracking-[0.18em] text-white/70 uppercase">
-              <Mark size={18} tone="dark" /> The official collection
-            </p>
-            <p className="font-serif text-[1rem] text-gold italic">&ldquo;Not simply merchandise. A way to carry the CloudTech identity beyond the screen.&rdquo;</p>
-          </div>
+            <figcaption className="flex items-center justify-between gap-4 border-t border-line px-5 py-3.5 text-[0.875rem]">
+              <span className="font-medium text-ink">The Signature Collection</span>
+              <span className="text-subtle">2026 edition</span>
+            </figcaption>
+          </figure>
         </div>
       </div>
-      <div className="mt-14 flex justify-center">
-        <a href="#collection" aria-label="Scroll to the Signature Collection" className="p-2">
-          <ArrowDown className="h-4 w-4 animate-bounce text-gold motion-reduce:animate-none" />
-        </a>
-      </div>
+    </section>
+  );
+}
+
+const STEPS = [
+  { n: "1", title: "Choose your pieces", body: "Add items to your order request, with sizes and quantities." },
+  { n: "2", title: "We confirm with you", body: "CloudTech contacts you with availability, the final price and delivery." },
+  { n: "3", title: "Pay and receive", body: "You pay only once you've agreed. We deliver within Nigeria." },
+];
+
+/** How ordering works, laid out like the facts row on the main website. */
+export function HowItWorks() {
+  return (
+    <section aria-label="How ordering works" className="border-y border-line bg-paper">
+      <ol className="container-page grid gap-x-8 gap-y-8 py-10 md:grid-cols-3 lg:py-12">
+        {STEPS.map((s) => (
+          <li key={s.n} className="flex gap-4">
+            <span className="font-serif text-[2.2rem] leading-none font-medium text-brass-accent">{s.n}</span>
+            <span>
+              <span className="block font-semibold text-ink">{s.title}</span>
+              <span className="mt-1 block text-[0.9rem] leading-snug text-muted">{s.body}</span>
+            </span>
+          </li>
+        ))}
+      </ol>
     </section>
   );
 }
 
 const PILLARS = [
-  { Icon: Cpu, title: "Technology first", body: "CloudTech is a technology, data and digital solutions company. The Collection carries that identity off the screen and into the room." },
-  { Icon: Award, title: "Made to be worn", body: "Pieces chosen to look right in a client meeting, a pitch, a conference or on a university stage." },
-  { Icon: Layers, title: "One ecosystem", body: "A common thread between CloudTech Analytics, CloudTech Academy learners, The Counsel and The Manifest." },
+  { title: "Technology first", body: "CloudTech is a technology, data and digital solutions company. The Collection carries that identity off the screen and into the room." },
+  { title: "Made to be worn", body: "Pieces chosen to look right in a client meeting, a pitch, a conference or on a university stage." },
+  { title: "One ecosystem", body: "A common thread between CloudTech Analytics, CloudTech Academy learners, The Counsel and The Manifest." },
 ];
 
 export function BrandStory() {
   return (
-    <section id="story" className="relative scroll-mt-20 overflow-hidden border-b border-white/10 bg-navy py-20 text-white md:py-28">
-      <span aria-hidden className="absolute top-0 left-1/2 h-px w-48 -translate-x-1/2 bg-gradient-to-r from-transparent via-gold to-transparent" />
-      <div className="mx-auto max-w-5xl px-4 text-center sm:px-6 lg:px-8">
-        <p className="inline-flex items-center gap-2 text-[0.72rem] font-semibold tracking-[0.2em] text-gold uppercase">
-          <Sparkles className="h-3.5 w-3.5" /> Our idea
-        </p>
-        <h2 className="mt-4 font-serif text-[2.5rem] font-medium tracking-tight sm:text-[3.6rem]">More Than Merchandise</h2>
-        <div className="mx-auto mt-8 max-w-3xl space-y-6 text-[1.05rem] leading-relaxed text-white/75 sm:text-[1.15rem]">
-          <p>CloudTech Collection is an extension of the CloudTech brand, created for the people who work with us, learn with us, build with us and believe in what we&apos;re building.</p>
-          <p className="font-serif text-[1.4rem] text-gold italic sm:text-[1.6rem]">
-            This is not simply merchandise.
-            <br className="hidden sm:inline" /> It is a way to carry the CloudTech identity beyond the screen.
-          </p>
-        </div>
-        <div className="mt-14 grid gap-8 border border-gold/30 bg-navy-2 p-8 text-left sm:p-10 md:grid-cols-12 md:items-center">
-          <div className="flex flex-col items-center justify-center border border-white/10 bg-navy p-6 md:col-span-4">
-            <Mark size={96} tone="dark" />
-            <span className="mt-4 font-mono text-[0.72rem] font-semibold tracking-[0.16em] text-gold uppercase">The CloudTech mark</span>
-          </div>
-          <div className="md:col-span-8">
-            <h3 className="font-serif text-[1.7rem] font-semibold">One mark, on every piece</h3>
-            <p className="mt-3 text-[0.92rem] leading-relaxed text-white/75">
-              The same CloudTech logo appears on our software, our Academy certificates and our work for clients. On the Collection it&apos;s embroidered in gold and cream
-              on fabric, foiled on journals and boxes, and printed on the tee, so every piece is unmistakably CloudTech.
+    <section id="story" className="bg-night py-20 text-cream sm:py-28">
+      <div className="container-page grid gap-14 lg:grid-cols-12">
+        <div className="lg:col-span-5">
+          <SectionHeading
+            tone="night"
+            title={
+              <>
+                More than <span className="text-brass-light">merchandise.</span>
+              </>
+            }
+            intro="CloudTech Collection is an extension of the CloudTech brand, made for the people who work with us, learn with us, build with us and believe in what we're building."
+          />
+          <div className="mt-10 flex items-center gap-5 rounded-2xl border border-cream/12 bg-night-2 p-6">
+            <CloudTechMark tone="reversed" className="h-16 w-16 shrink-0" />
+            <p className="text-[0.95rem] leading-relaxed text-cream/70">
+              The same logo appears on our software, our Academy certificates and our client work. Here it&apos;s embroidered, foiled and printed, so every piece is unmistakably CloudTech.
             </p>
-            <div className="mt-6">
-              <Logo tone="dark" sub="ANALYTICS" size={40} />
-            </div>
           </div>
         </div>
-        <div className="mt-12 grid gap-6 text-left md:grid-cols-3">
-          {PILLARS.map(({ Icon, title, body }) => (
-            <div key={title} className="border border-white/10 bg-navy-2/80 p-6">
-              <span className="mb-4 flex h-8 w-8 items-center justify-center border border-gold/30 bg-navy text-gold">
-                <Icon className="h-4 w-4" />
+        <ul className="divide-y divide-cream/12 border-y border-cream/12 lg:col-span-6 lg:col-start-7">
+          {PILLARS.map((p, i) => (
+            <li key={p.title} className="grid grid-cols-[3rem_1fr] gap-4 py-8">
+              <span className="font-serif text-[1.6rem] leading-none text-brass-light">0{i + 1}</span>
+              <span>
+                <h3 className="font-serif text-[1.5rem] text-cream">{p.title}</h3>
+                <p className="mt-2 text-[0.975rem] leading-relaxed text-cream/70">{p.body}</p>
               </span>
-              <h3 className="font-serif text-[1.25rem] font-semibold">{title}</h3>
-              <p className="mt-2 text-[0.85rem] leading-relaxed text-white/70">{body}</p>
-            </div>
+            </li>
           ))}
-        </div>
+        </ul>
       </div>
     </section>
   );
 }
 
-const ECO_ICONS = { "CloudTech Analytics": BarChart3, "CloudTech Academy": GraduationCap, "The Counsel": Scale, "The Manifest": Truck } as const;
-const ECO_KIND = { "CloudTech Analytics": "Core practice", "CloudTech Academy": "Education and community", "The Counsel": "Legal technology", "The Manifest": "Logistics technology" } as const;
+const ECO_MARK = { "CloudTech Analytics": null, "CloudTech Academy": "academy", "The Counsel": "counsel", "The Manifest": "manifest" } as const;
 
 export function Ecosystem() {
   return (
-    <section id="ecosystem" className="scroll-mt-20 border-b border-line bg-mist py-20 md:py-28">
+    <section id="ecosystem" className="py-20 sm:py-28">
       <div className="container-page">
-        <div className="mb-14 max-w-3xl">
-          <p className="flex items-center gap-2 text-[0.72rem] font-semibold tracking-[0.2em] text-gold-deep uppercase">
-            <span className="h-px w-6 bg-gold" /> The parent brand and its products
-          </p>
-          <h2 className="mt-2 font-serif text-[2.3rem] font-medium tracking-tight text-navy sm:text-[3rem]">The CloudTech Ecosystem</h2>
-          <p className="mt-3 text-[1rem] leading-relaxed text-muted">
-            CloudTech is a technology, data, analytics and digital solutions company. The CloudTech Collection is one official initiative within it.
-          </p>
-        </div>
-        <ul className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+        <SectionHeading title="Part of the CloudTech family." intro="CloudTech is a technology, data and digital solutions company. The Collection is one official initiative within it." />
+        <ul className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {ECOSYSTEM.map((e) => {
-            const Icon = ECO_ICONS[e.name];
+            const mark = ECO_MARK[e.name];
             return (
               <li key={e.name}>
-                <a href={e.href} target="_blank" rel="noopener noreferrer" className="group flex h-full flex-col justify-between border border-line bg-white p-6 transition-all hover:border-gold hover:shadow-md">
-                  <div>
-                    <span className="mb-4 flex h-10 w-10 items-center justify-center bg-navy text-gold transition-colors group-hover:bg-navy-2">
-                      {e.name === "CloudTech Analytics" ? <Mark size={22} tone="dark" /> : <Icon className="h-5 w-5" />}
+                <a href={e.href} target="_blank" rel="noopener noreferrer" className="group flex h-full flex-col rounded-2xl border border-line bg-paper p-6 transition-colors hover:border-brass/50">
+                  {mark ? (
+                    <ProductMark product={mark} className="h-11 w-11" />
+                  ) : (
+                    <span className="flex h-11 w-11 items-center justify-center rounded-[11px] bg-night">
+                      <CloudTechMark tone="reversed" className="h-6 w-6" />
                     </span>
-                    <p className="mb-1 text-[0.68rem] font-semibold tracking-[0.12em] text-subtle uppercase">{ECO_KIND[e.name]}</p>
-                    <h3 className="font-serif text-[1.4rem] font-semibold text-navy">{e.name}</h3>
-                    <p className="mt-1 mb-3 text-[0.8rem] font-medium text-gold-deep">{e.line}</p>
-                    <p className="text-[0.82rem] leading-relaxed text-muted">{e.body}</p>
-                  </div>
-                  <span className="mt-6 inline-flex items-center gap-1.5 border-t border-line pt-4 text-[0.72rem] font-semibold tracking-[0.1em] text-navy uppercase group-hover:text-gold-deep">
-                    Explore <ArrowUpRight className="h-3.5 w-3.5" />
+                  )}
+                  <h3 className="mt-5 font-serif text-[1.35rem] text-ink">{e.name}</h3>
+                  <p className="mt-1 text-[0.85rem] font-medium text-brass-dark">{e.line}</p>
+                  <p className="mt-3 flex-1 text-[0.9rem] leading-relaxed text-muted">{e.body}</p>
+                  <span className="mt-6 inline-flex items-center gap-1.5 text-[0.875rem] font-semibold text-ink group-hover:text-brass-dark">
+                    Visit <ArrowUpRight aria-hidden className="h-4 w-4" />
+                    <span className="sr-only">{e.name} (opens in a new tab)</span>
                   </span>
                 </a>
               </li>
@@ -186,23 +163,18 @@ export function Ecosystem() {
 
 export function Faq() {
   return (
-    <section className="border-b border-line bg-white py-20 md:py-24">
-      <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-        <div className="mb-12 text-center">
-          <p className="inline-flex items-center gap-2 text-[0.72rem] font-semibold tracking-[0.2em] text-gold-deep uppercase">
-            <HelpCircle className="h-4 w-4" /> How ordering works
-          </p>
-          <h2 className="mt-2 font-serif text-[2.2rem] font-medium tracking-tight text-navy sm:text-[2.7rem]">Questions, answered</h2>
-          <p className="mt-2 text-[0.92rem] text-muted">How individual requests, corporate orders and delivery work.</p>
-        </div>
-        <div className="divide-y divide-line border-y border-line">
+    <section className="border-t border-line bg-paper py-20 sm:py-28">
+      <div className="container-page grid gap-12 lg:grid-cols-12">
+        <SectionHeading className="lg:col-span-4" title="Questions, answered." intro="How individual requests, corporate orders and delivery work." />
+        <div className="divide-y divide-line border-y border-line lg:col-span-7 lg:col-start-6">
           {FAQ.map((f, i) => (
-            <details key={f.q} open={i === 0} className="group py-4">
-              <summary className="flex cursor-pointer list-none items-center justify-between gap-4 py-2 font-serif text-[1.25rem] font-semibold text-navy [&::-webkit-details-marker]:hidden">
+            <details key={f.q} open={i === 0} className="group py-2">
+              <summary className="flex cursor-pointer list-none items-center justify-between gap-4 py-4 font-serif text-[1.25rem] text-ink [&::-webkit-details-marker]:hidden">
                 {f.q}
-                <ChevronDown className="h-4 w-4 shrink-0 text-gold transition-transform group-open:rotate-180" />
+                <Plus aria-hidden className="h-5 w-5 shrink-0 text-brass-dark group-open:hidden" strokeWidth={1.75} />
+                <Minus aria-hidden className="hidden h-5 w-5 shrink-0 text-brass-dark group-open:block" strokeWidth={1.75} />
               </summary>
-              <p className="mt-2 pr-8 text-[0.92rem] leading-relaxed text-muted">{f.a}</p>
+              <p className="pr-8 pb-4 text-[0.975rem] leading-relaxed text-muted">{f.a}</p>
             </details>
           ))}
         </div>
@@ -211,89 +183,104 @@ export function Faq() {
   );
 }
 
+function ColumnTitle({ children }: { children: string }) {
+  return <h2 className="mb-5 text-[0.875rem] font-medium text-cream/50">{children}</h2>;
+}
+
+const linkCls = "link-underline text-[0.9375rem] text-cream/75 transition-colors hover:text-cream";
+
+function External({ href, children }: { href: string; children: string }) {
+  return (
+    <a href={href} target="_blank" rel="noopener noreferrer" className={`${linkCls} inline-flex items-center gap-1.5`}>
+      {children}
+      <ArrowUpRight aria-hidden className="h-3.5 w-3.5 text-brass-light" />
+      <span className="sr-only">(opens in a new tab)</span>
+    </a>
+  );
+}
+
+const COLLECTION_LINKS = [
+  ["The Signature Collection", "/#collection"],
+  ["The Corporate Kit", "/#corporate-kit"],
+  ["Corporate and bulk orders", "/#corporate-orders"],
+  ["Academy Collection", "/#academy"],
+  ["Our story", "/#story"],
+] as const;
+
+const SOCIAL = [
+  ["LinkedIn", "https://www.linkedin.com/company/cloudtech-analytics/"],
+  ["X (Twitter)", "https://twitter.com/cloudtechanalytics"],
+  ["Instagram", "https://instagram.com/jd_cta"],
+] as const;
+
+/** The same footer as www.cloudtechanalytics.com, with the Collection's links. */
 export function Footer() {
   return (
-    <footer className="border-t border-white/10 bg-[#051426] pt-16 pb-12 text-white">
-      <div className="container-page">
-        <div className="grid gap-10 border-b border-white/10 pb-14 md:grid-cols-12">
-          <div className="md:col-span-4">
-            <Logo tone="dark" />
-            <p className="mt-4 max-w-sm text-[0.85rem] leading-relaxed text-white/70">
-              <strong className="font-semibold text-white">CloudTech Collection</strong> is an official CloudTech Analytics initiative: merchandise for the people building,
-              using and growing with CloudTech.
+    <footer className="bg-night text-cream">
+      <div className="container-page pt-16 pb-10 lg:pt-24">
+        <div className="grid gap-12 lg:grid-cols-12 lg:gap-8">
+          <div className="lg:col-span-4">
+            <CloudTechLogo tone="reversed" size="lg" />
+            <p className="mt-7 max-w-sm text-[0.975rem] leading-relaxed text-cream/70">
+              CloudTech Collection is an official CloudTech Analytics initiative: merchandise for the people building, using and growing with CloudTech.
             </p>
-            <ul className="mt-5 space-y-2 text-[0.82rem] text-white/60">
-              <li className="flex items-center gap-2">
-                <MapPin className="h-3.5 w-3.5 text-gold" /> Lagos, Nigeria
-              </li>
-              <li className="flex items-center gap-2">
-                <Mail className="h-3.5 w-3.5 text-gold" />
-                <a href={`mailto:${SITE.email}`} className="break-all hover:text-white">
+            <ul className="mt-7 space-y-2 text-[0.9375rem]">
+              <li>
+                <a href={`mailto:${SITE.email}`} className="break-all text-cream hover:text-brass-light">
                   {SITE.email}
                 </a>
               </li>
-              <li className="flex items-center gap-2">
-                <MessageCircle className="h-3.5 w-3.5 text-gold" />
-                <a href={whatsappLink("Hello CloudTech, I have a question about the CloudTech Collection.")} target="_blank" rel="noopener noreferrer" className="hover:text-white">
-                  WhatsApp +234 911 559 1877
+              <li>
+                <a href={whatsappLink("Hello CloudTech, I have a question about the CloudTech Collection.")} target="_blank" rel="noopener noreferrer" className="text-cream hover:text-brass-light">
+                  +234 911 559 1877 <span className="text-cream/50">(WhatsApp)</span>
+                  <span className="sr-only">(opens in a new tab)</span>
                 </a>
               </li>
+              <li className="text-cream/60">Lagos, Nigeria</li>
             </ul>
           </div>
-          <nav aria-label="CloudTech ecosystem" className="md:col-span-3">
-            <h2 className="mb-4 text-[0.72rem] font-semibold tracking-[0.16em] text-gold uppercase">CloudTech</h2>
-            <ul className="space-y-2.5 text-[0.85rem] text-white/75">
-              {ECOSYSTEM.map((e) => (
-                <li key={e.name}>
-                  <a href={e.href} target="_blank" rel="noopener noreferrer" className="hover:text-white">
-                    {e.name}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </nav>
-          <nav aria-label="Collection" className="md:col-span-3">
-            <h2 className="mb-4 text-[0.72rem] font-semibold tracking-[0.16em] text-gold uppercase">Collection</h2>
-            <ul className="space-y-2.5 text-[0.85rem] text-white/75">
-              {[
-                ["The Signature Collection", "/#collection"],
-                ["The Corporate Kit", "/#corporate-kit"],
-                ["Academy Collection (coming soon)", "/#academy"],
-                ["Corporate and bulk orders", "/#corporate-orders"],
-                ["Our story", "/#story"],
-              ].map(([l, h]) => (
-                <li key={h}>
-                  <a href={h} className="hover:text-white">
-                    {l}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </nav>
-          <div className="md:col-span-2">
-            <h2 className="mb-4 text-[0.72rem] font-semibold tracking-[0.16em] text-gold uppercase">Follow</h2>
-            <ul className="space-y-2.5 text-[0.85rem] text-white/75">
-              {[
-                ["LinkedIn", "https://www.linkedin.com/company/cloudtech-analytics/"],
-                ["X (Twitter)", "https://twitter.com/cloudtechanalytics"],
-                ["Instagram", "https://instagram.com/jd_cta"],
-              ].map(([l, h]) => (
-                <li key={h}>
-                  <a href={h} target="_blank" rel="noopener noreferrer" className="hover:text-white">
-                    {l}
-                  </a>
-                </li>
-              ))}
-            </ul>
+
+          <div className="grid grid-cols-2 gap-10 sm:grid-cols-3 lg:col-span-8 lg:pl-10">
+            <nav aria-label="Collection">
+              <ColumnTitle>Collection</ColumnTitle>
+              <ul className="space-y-3.5">
+                {COLLECTION_LINKS.map(([l, h]) => (
+                  <li key={h}>
+                    <Link href={h} className={linkCls}>
+                      {l}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+            <nav aria-label="CloudTech">
+              <ColumnTitle>CloudTech</ColumnTitle>
+              <ul className="space-y-3.5">
+                {ECOSYSTEM.map((e) => (
+                  <li key={e.name}>
+                    <External href={e.href}>{e.name}</External>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+            <div>
+              <ColumnTitle>Follow</ColumnTitle>
+              <ul className="space-y-3.5">
+                {SOCIAL.map(([l, h]) => (
+                  <li key={h}>
+                    <External href={h}>{l}</External>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
         </div>
-        <div className="flex flex-col items-center justify-between gap-3 pt-8 text-[0.78rem] text-white/50 sm:flex-row">
+
+        <div className="mt-16 flex flex-col gap-3 border-t border-cream/12 pt-8 text-[0.8125rem] text-cream/55 sm:flex-row sm:items-center sm:justify-between">
+          <p>© 2026 CloudTech Analytics. All rights reserved.</p>
           <p>
-            <span className="font-medium text-white/80">CloudTech Collection</span> · An official CloudTech Analytics initiative.
-          </p>
-          <p>
-            © 2026 CloudTech Analytics. All rights reserved. ·{" "}
-            <Link href="/admin" className="text-white/60 underline-offset-4 hover:text-gold hover:underline">
+            An official CloudTech Analytics initiative ·{" "}
+            <Link href="/admin" className="text-cream/70 underline-offset-4 hover:text-brass-light hover:underline">
               Staff sign-in
             </Link>
           </p>
