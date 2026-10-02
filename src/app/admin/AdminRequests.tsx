@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState, type FormEvent } from "react";
-import { Download, LogOut, Mail, MessageCircle, RefreshCw } from "lucide-react";
+import { Download, LogOut, Mail, MessageCircle, RefreshCw, Trash2 } from "lucide-react";
 import type { Session } from "@supabase/supabase-js";
 import { supabase } from "@/lib/supabase";
 import { Field } from "@/components/Fields";
@@ -65,10 +65,20 @@ function SignIn({ onDone }: { onDone: () => void }) {
   );
 }
 
-function RequestRow({ r, onSaved }: { r: Req; onSaved: (r: Req) => void }) {
+function RequestRow({ r, onSaved, onDeleted }: { r: Req; onSaved: (r: Req) => void; onDeleted: (id: string) => void }) {
   const [open, setOpen] = useState(r.status === "new");
   const [note, setNote] = useState(r.admin_note);
   const [saving, setSaving] = useState(false);
+  const [confirming, setConfirming] = useState(false);
+  const [deleteError, setDeleteError] = useState<string | null>(null);
+  const remove = async () => {
+    setSaving(true);
+    setDeleteError(null);
+    const { data, error } = await supabase().from("collection_requests").delete().eq("id", r.id).select("id");
+    setSaving(false);
+    if (error || !data?.length) setDeleteError("Couldn't delete this request. Refresh and try again.");
+    else onDeleted(r.id);
+  };
   const save = async (patch: Partial<Req>) => {
     setSaving(true);
     const { data, error } = await supabase().from("collection_requests").update(patch).eq("id", r.id).select().single();
@@ -157,6 +167,28 @@ function RequestRow({ r, onSaved }: { r: Req; onSaved: (r: Req) => void }) {
                 Save note
               </button>
             )}
+            <div className="border-t border-line pt-4">
+              {confirming ? (
+                <div className="space-y-2">
+                  <p className="text-[0.88rem] text-navy">
+                    Delete <span className="font-mono">{r.reference}</span> for good? This can&apos;t be undone.
+                  </p>
+                  <div className="flex gap-2">
+                    <button type="button" onClick={() => void remove()} disabled={saving} className="flex-1 bg-danger px-3 py-2 text-[0.85rem] font-semibold text-white disabled:opacity-60">
+                      {saving ? "Deleting…" : "Yes, delete"}
+                    </button>
+                    <button type="button" onClick={() => setConfirming(false)} disabled={saving} className={buttonClass("outline", "flex-1 px-3 py-2")}>
+                      Keep it
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <button type="button" onClick={() => setConfirming(true)} className="inline-flex items-center gap-1.5 text-[0.85rem] text-subtle hover:text-danger">
+                  <Trash2 className="h-4 w-4" /> Delete request
+                </button>
+              )}
+              {deleteError && <p className="mt-2 text-[0.85rem] text-danger">{deleteError}</p>}
+            </div>
           </div>
         </div>
       )}
@@ -270,7 +302,7 @@ export function AdminRequests() {
         ) : (
           <ul className="mt-6 space-y-3">
             {shown.map((r) => (
-              <RequestRow key={r.id} r={r} onSaved={(n) => setRows(rows.map((x) => (x.id === n.id ? n : x)))} />
+              <RequestRow key={r.id} r={r} onSaved={(n) => setRows(rows.map((x) => (x.id === n.id ? n : x)))} onDeleted={(id) => setRows(rows.filter((x) => x.id !== id))} />
             ))}
           </ul>
         )}
