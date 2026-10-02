@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { ArrowDown, ArrowRight, ArrowUpRight, Award, BarChart3, ChevronDown, Cpu, GraduationCap, HelpCircle, Layers, Mail, MapPin, MessageCircle, Scale, Sparkles, Truck } from "lucide-react";
 import { FAQ } from "@/data/products";
 import { ECOSYSTEM, SITE, whatsappLink } from "@/lib/site";
@@ -290,7 +291,12 @@ export function Footer() {
           <p>
             <span className="font-medium text-white/80">CloudTech Collection</span> · An official CloudTech Analytics initiative.
           </p>
-          <p>© 2026 CloudTech Analytics. All rights reserved.</p>
+          <p>
+            © 2026 CloudTech Analytics. All rights reserved. ·{" "}
+            <Link href="/admin" className="text-white/60 underline-offset-4 hover:text-gold hover:underline">
+              Staff sign-in
+            </Link>
+          </p>
         </div>
       </div>
     </footer>
