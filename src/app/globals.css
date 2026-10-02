@@ -23,6 +23,7 @@
 @theme inline {
   --font-serif: var(--font-cormorant), "Cormorant Garamond", Georgia, serif;
   --font-sans: var(--font-inter), Inter, "Segoe UI", Arial, sans-serif;
+  --font-logo: var(--font-playfair), "Playfair Display", Georgia, serif;
 }
 
 @layer base {
@@ -35,6 +36,12 @@
     color: var(--color-ink);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
+  }
+  h1,
+  h2,
+  h3 {
+    line-height: 1.12;
+    text-wrap: balance;
   }
   ::selection {
     background: var(--color-gold-pale);
@@ -85,43 +92,32 @@
   }
 }
 
-/* Gentle reveal on scroll (components/Reveal.tsx). Content is visible without JavaScript. */
-.js .reveal {
-  opacity: 0;
-  transform: translateY(14px);
-  transition:
-    opacity 0.8s var(--ease-out-soft),
-    transform 0.8s var(--ease-out-soft);
-}
-.js .reveal.is-visible {
-  opacity: 1;
-  transform: none;
-}
-.js .reveal .gold-rule {
-  transform: scaleX(0);
-  transition: transform 1.1s var(--ease-out-soft) 0.25s;
-}
-.js .reveal.is-visible .gold-rule {
-  transform: scaleX(1);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
-  .js .reveal,
-  .js .reveal .gold-rule {
-    opacity: 1;
-    transform: none;
-    transition: none;
-  }
-}
-
 @keyframes fade {
   from {
     opacity: 0;
   }
   to {
     opacity: 1;
+  }
+}
+
+@keyframes slide-in {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
   }
 }

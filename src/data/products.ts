@@ -1,59 +1,65 @@
 /**
  * The CloudTech Collection catalogue.
  *
- * To add a product, add an entry to PRODUCTS. To change a price, edit `price` (whole naira; null shows
- * "Price on request"). To use a real photo instead of a drawn mockup, give the image a `src`
- * (put the file in /public/products) and keep the `alt`.
+ * Prices are whole naira (null shows "Price on request"). Photos live in /public/products and are
+ * produced by scripts/brand_photos.py, which puts the CloudTech logo on the AI Studio product photos.
  */
-import type { MockupKey } from "@/components/mockups/Mockup";
-import type { PaletteName } from "@/components/mockups/parts";
-
-export type ProductImage = { alt: string } & ({ src: string; mockup?: never } | { mockup: MockupKey; palette?: PaletteName; view?: string; src?: never });
-
-export type Category = "apparel" | "accessories" | "stationery" | "kits";
-export type Line = "signature" | "corporate" | "academy";
+export type Category = "Apparel" | "Stationery" | "Accessories" | "Kits";
 
 export type Product = {
   id: string;
   slug: string;
   name: string;
-  line: Line;
   category: Category;
-  /** One line for cards. */
-  tagline: string;
+  /** One line under the name on cards. */
+  subtitle: string;
   description: string;
   details: string[];
-  /** Whole naira. null = price on request (to be confirmed). */
+  specifications: Record<string, string>;
+  /** Whole naira. null = price on request. */
   price: number | null;
-  images: ProductImage[];
+  images: { src: string; alt: string }[];
   sizes?: string[];
-  variants?: string[];
-  /** false = not yet orderable (e.g. the Academy collection). */
+  colour?: { name: string; hex: string };
+  /** Text shown on the back, for pieces that have it. */
+  backTreatment?: string;
+  badge?: string;
   available: boolean;
   featured: boolean;
 };
 
-const APPAREL_SIZES = ["S", "M", "L", "XL", "XXL"];
+const SIZES = ["S", "M", "L", "XL", "XXL", "3XL"];
 
 export const PRODUCTS: Product[] = [
   {
     id: "ct-polo",
     slug: "signature-polo",
     name: "CloudTech Signature Polo",
-    line: "signature",
-    category: "apparel",
-    tagline: "Navy piqué polo with the embroidered CloudTech mark.",
+    category: "Apparel",
+    subtitle: "Navy piqué polo with the embroidered CloudTech logo",
     description:
-      "The piece the collection is built around. A structured navy piqué polo with the CloudTech Analytics logo embroidered on the left chest and fine gold piping at the collar and sleeves: smart enough for a client meeting, comfortable enough for a long conference day.",
-    details: ["Navy cotton piqué", "Embroidered CloudTech Analytics logo, left chest", "Gold piping at the collar and cuffs", "Three-button placket, ribbed cuffs"],
-    price: null,
-    images: [
-      { mockup: "polo", palette: "navy", alt: "Navy CloudTech Signature Polo, front" },
-      { mockup: "embroidery", palette: "navy", alt: "Close-up of the gold embroidered CloudTech mark" },
-      { mockup: "polo", palette: "navy", view: "back", alt: "Navy CloudTech Signature Polo, back" },
+      "The piece the collection is built around. A structured navy piqué polo with the CloudTech Analytics logo embroidered on the left chest and gold piping at the collar: smart enough for a client meeting, comfortable enough for a long conference day.",
+    details: [
+      "CloudTech Analytics logo embroidered on the left chest in gold and cream thread",
+      "Gold piping on the collar",
+      "Three-button placket with tonal buttons",
+      "Ribbed collar and cuffs that keep their shape",
     ],
-    sizes: APPAREL_SIZES,
-    variants: ["Navy with gold piping", "Navy, no piping"],
+    specifications: {
+      Material: "Cotton piqué",
+      Colour: "Deep corporate navy",
+      Embroidery: "Gold and cream thread, left chest",
+      Fit: "Regular, true to size",
+      Care: "Wash cold, inside out; dry in shade",
+    },
+    price: 38500,
+    images: [
+      { src: "/products/signature-polo.jpg", alt: "Navy CloudTech Signature Polo with the embroidered CloudTech logo" },
+      { src: "/products/collection-flatlay.jpg", alt: "The polo with the rest of the CloudTech Collection" },
+    ],
+    sizes: SIZES,
+    colour: { name: "Deep corporate navy", hex: "#071B33" },
+    badge: "Signature",
     available: true,
     featured: true,
   },
@@ -61,19 +67,26 @@ export const PRODUCTS: Product[] = [
     id: "ct-tee",
     slug: "essential-tee",
     name: "CloudTech Essential Tee",
-    line: "signature",
-    category: "apparel",
-    tagline: "Heavyweight white tee with a quiet chest logo.",
+    category: "Apparel",
+    subtitle: "Heavyweight white tee with the CloudTech logo",
     description:
-      "A clean, heavyweight white T-shirt with the CloudTech Analytics logo placed subtly on the chest. The optional back print carries the line that sums up the work: Data. Insights. Better Decisions.",
-    details: ["Heavyweight white cotton jersey", "CloudTech Analytics logo, left chest", "Optional back print: Data. Insights. Better Decisions."],
-    price: null,
+      "A clean, heavyweight white T-shirt carrying the CloudTech Analytics logo, with the line that sums up the work printed across the upper back: Data. Insights. Better Decisions.",
+    details: ["Heavyweight cotton jersey", "CloudTech Analytics logo on the chest", "Back print: Data. Insights. Better Decisions.", "Ribbed crew neck"],
+    specifications: {
+      Material: "Cotton jersey, heavyweight",
+      Colour: "White",
+      Print: "Front logo; back line \"Data. Insights. Better Decisions.\"",
+      Fit: "Relaxed",
+      Care: "Wash cold; low tumble dry",
+    },
+    price: 22000,
     images: [
-      { mockup: "tee", palette: "white", alt: "White CloudTech Essential Tee, front" },
-      { mockup: "tee", palette: "white", view: "back", alt: "White CloudTech Essential Tee, back print" },
+      { src: "/products/essential-tee.jpg", alt: "White CloudTech Essential Tee with the CloudTech logo" },
+      { src: "/products/collection-flatlay.jpg", alt: "The tee with the rest of the CloudTech Collection" },
     ],
-    sizes: APPAREL_SIZES,
-    variants: ["With back print", "Front logo only"],
+    sizes: SIZES.slice(0, 5),
+    colour: { name: "White", hex: "#FFFFFF" },
+    backTreatment: "Data. Insights. Better Decisions.",
     available: true,
     featured: true,
   },
@@ -81,17 +94,21 @@ export const PRODUCTS: Product[] = [
     id: "ct-cap",
     slug: "executive-cap",
     name: "CloudTech Executive Cap",
-    line: "signature",
-    category: "accessories",
-    tagline: "Structured navy cap, embroidered in gold and cream.",
-    description: "A structured six-panel navy cap with the CloudTech mark embroidered in gold and cream. Minimal, clean, and finished with a brass strap buckle.",
-    details: ["Structured six-panel navy cotton twill", "Gold and cream embroidered mark", "Adjustable strap with brass buckle"],
-    price: null,
+    category: "Accessories",
+    subtitle: "Structured navy cap with the embroidered CloudTech mark",
+    description: "A structured six-panel navy cap with the CloudTech mark embroidered on the front in gold and cream, and a metal CloudTech tag on the strap.",
+    details: ["Structured six-panel crown", "CloudTech mark embroidered on the front", "Adjustable strap with metal CloudTech tag", "Pre-curved visor"],
+    specifications: {
+      Fabric: "Cotton twill",
+      Colour: "Navy",
+      Embroidery: "Raised CloudTech mark, gold and cream",
+      Size: "One size, adjustable",
+    },
+    price: 18500,
     images: [
-      { mockup: "cap", palette: "navy", view: "side", alt: "Navy CloudTech Executive Cap, side" },
-      { mockup: "cap", palette: "navy", alt: "Navy CloudTech Executive Cap, front" },
+      { src: "/products/executive-cap.jpg", alt: "Navy CloudTech Executive Cap with the embroidered CloudTech mark" },
+      { src: "/products/collection-flatlay.jpg", alt: "The cap with the rest of the CloudTech Collection" },
     ],
-    sizes: ["One size, adjustable"],
     available: true,
     featured: true,
   },
@@ -99,16 +116,21 @@ export const PRODUCTS: Product[] = [
     id: "ct-journal",
     slug: "hardcover-journal",
     name: "CloudTech Hardcover Journal",
-    line: "signature",
-    category: "stationery",
-    tagline: "Navy hardcover with gold foil, band and page marker.",
+    category: "Stationery",
+    subtitle: "Navy hardcover with gold foil: Ideas. Analysis. Impact.",
     description:
-      "A dark navy hardcover journal with the CloudTech Analytics logo in gold foil, a gold elastic band and a gold ribbon marker. The cover carries three words: Ideas. Analysis. Impact.",
-    details: ["A5 navy hardcover, leather-grain finish", "Gold foil logo and cover text", "Gold elastic closure and ribbon marker", "Dotted cream pages"],
-    price: null,
+      "A dark navy hardcover journal with \"Ideas. Analysis. Impact.\" and the CloudTech Analytics logo in gold foil, a navy elastic closure and a gold ribbon marker. For strategy sessions, workshops and planning.",
+    details: ["Gold foil cover text and CloudTech logo", "Navy leather-feel hardcover", "Elastic closure and gold ribbon marker", "Dotted cream pages"],
+    specifications: {
+      Format: "A5",
+      Cover: "Navy leather-feel hardcover, gold foil",
+      Pages: "Dotted, cream",
+      Extras: "Elastic closure, ribbon marker",
+    },
+    price: 14000,
     images: [
-      { mockup: "journal", palette: "navy", alt: "Navy CloudTech Hardcover Journal with gold foil" },
-      { mockup: "journal", palette: "navy", view: "open", alt: "The journal open on dotted pages" },
+      { src: "/products/journal-and-pen.jpg", alt: "Navy CloudTech Hardcover Journal with gold foil and the Executive Pen" },
+      { src: "/products/collection-flatlay.jpg", alt: "The journal with the rest of the CloudTech Collection" },
     ],
     available: true,
     featured: true,
@@ -117,15 +139,20 @@ export const PRODUCTS: Product[] = [
     id: "ct-pen",
     slug: "executive-pen",
     name: "CloudTech Executive Pen",
-    line: "signature",
-    category: "stationery",
-    tagline: "Navy metal pen with gold accents.",
-    description: "A weighted navy metal pen with gold clip, rings and tip, and CLOUDTECH printed subtly along the barrel. Writes smoothly; looks right on a boardroom table.",
-    details: ["Navy lacquered metal barrel", "Gold-tone clip, rings and tip", "Twist mechanism, black ink", "CLOUDTECH printed on the barrel"],
-    price: null,
+    category: "Stationery",
+    subtitle: "Navy metal pen with gold accents",
+    description: "A weighted navy metal pen with a gold clip, rings and tip. Made for signing, sketching and the boardroom table.",
+    details: ["Navy metal barrel", "Gold-tone clip, rings and tip", "Twist mechanism", "Black ink, refillable"],
+    specifications: {
+      Body: "Metal, navy finish",
+      Fittings: "Gold tone",
+      Mechanism: "Twist",
+      Ink: "Black, refillable",
+    },
+    price: 9500,
     images: [
-      { mockup: "pen", alt: "Navy and gold CloudTech Executive Pen" },
-      { mockup: "pen", view: "detail", alt: "The pen's gold clip and printed barrel" },
+      { src: "/products/executive-pen.jpg", alt: "Navy and gold CloudTech Executive Pen" },
+      { src: "/products/journal-and-pen.jpg", alt: "The pen beside the CloudTech Hardcover Journal" },
     ],
     available: true,
     featured: true,
@@ -134,174 +161,103 @@ export const PRODUCTS: Product[] = [
     id: "ct-bottle",
     slug: "thermal-bottle",
     name: "CloudTech Thermal Bottle",
-    line: "signature",
-    category: "accessories",
-    tagline: "Matte navy vacuum bottle with a gold band.",
-    description: "A matte navy, double-walled steel bottle with a gold band, the CloudTech logo, and a quiet line of text: Data. Insights. Better Decisions.",
-    details: ["Double-walled stainless steel, 500 ml", "Matte navy finish with gold band", "Keeps drinks cold or hot for hours"],
-    price: null,
-    images: [{ mockup: "bottle", palette: "navy", alt: "Matte navy CloudTech Thermal Bottle" }],
-    available: true,
-    featured: true,
-  },
-  {
-    id: "ct-mug",
-    slug: "studio-mug",
-    name: "CloudTech Studio Mug",
-    line: "signature",
-    category: "accessories",
-    tagline: "White ceramic mug with a gold rim.",
-    description: "A heavy white ceramic mug with a fine gold rim and the CloudTech mark. For desks, studios and long analysis sessions.",
-    details: ["White ceramic, 350 ml", "Gold rim", "CloudTech mark"],
-    price: null,
-    images: [{ mockup: "mug", palette: "white", alt: "White CloudTech Studio Mug with gold rim" }],
-    available: true,
-    featured: false,
-  },
-  {
-    id: "ct-lanyard",
-    slug: "lanyard-and-card",
-    name: "CloudTech Lanyard & ID Card",
-    line: "corporate",
-    category: "accessories",
-    tagline: "Navy woven lanyard with a printed ID card.",
-    description: "A navy woven lanyard printed in gold, with a metal clip and a white ID card holder. Personalised cards are available for teams and events.",
-    details: ["Navy woven lanyard, gold print", "Metal clip", "Printed ID card, personalised for teams"],
-    price: null,
+    category: "Accessories",
+    subtitle: "Matte navy insulated bottle with a gold cap band",
+    description: "A matte navy, double-walled steel bottle with a gold cap band and the CloudTech mark, for long desk days and travel.",
+    details: ["Double-walled, vacuum insulated", "Matte navy finish with gold cap band", "CloudTech mark in gold", "Leak-proof cap"],
+    specifications: {
+      Capacity: "500 ml",
+      Material: "Stainless steel",
+      Finish: "Matte navy, gold band",
+    },
+    price: 24000,
     images: [
-      { mockup: "lanyard", alt: "Navy CloudTech lanyard with ID card" },
-      { mockup: "idcard", alt: "CloudTech ID card" },
+      { src: "/products/thermal-bottle.jpg", alt: "Matte navy CloudTech Thermal Bottle with the gold CloudTech mark" },
+      { src: "/products/collection-flatlay.jpg", alt: "The bottle with the rest of the CloudTech Collection" },
     ],
     available: true,
-    featured: false,
+    featured: true,
   },
   {
     id: "ct-kit",
     slug: "corporate-kit",
     name: "The CloudTech Corporate Kit",
-    line: "corporate",
-    category: "kits",
-    tagline: "Polo, cap, journal, pen, bottle, lanyard and ID card, boxed.",
+    category: "Kits",
+    subtitle: "The full coordinated set in a navy presentation box",
     description:
-      "A coordinated set for the people representing CloudTech every day: the Signature Polo, Executive Cap, Hardcover Journal, Executive Pen, Thermal Bottle, lanyard and ID card, presented in a navy rigid gift box with a gold band.",
-    details: ["Signature Polo and Executive Cap", "Hardcover Journal and Executive Pen", "Thermal Bottle", "Lanyard and personalised ID card", "Navy rigid gift box with gold band"],
-    price: null,
-    images: [
-      { mockup: "kit", alt: "The CloudTech Corporate Kit arranged around its gift box" },
-      { mockup: "giftbox", alt: "Navy CloudTech gift box with gold band" },
+      "For new team members, client partnerships, conference delegations and board members: the Signature Polo, Executive Cap, Hardcover Journal, Executive Pen, Thermal Bottle, lanyard and ID card, presented in a navy rigid gift box with the CloudTech Collection logo in gold foil.",
+    details: [
+      "CloudTech Signature Polo (sized per person)",
+      "CloudTech Executive Cap",
+      "CloudTech Hardcover Journal",
+      "CloudTech Executive Pen",
+      "CloudTech Thermal Bottle",
+      "Woven CloudTech lanyard and ID card",
+      "Navy rigid gift box with fitted insert",
     ],
-    sizes: APPAREL_SIZES,
+    specifications: {
+      Box: "Navy rigid box, gold foil lid, fitted insert",
+      Contents: "7 pieces",
+      Personalisation: "Names on ID cards; co-branded cards on request",
+      "Ideal for": "New starters, VIP clients, conferences, board meetings",
+    },
+    price: 98000,
+    images: [
+      { src: "/products/corporate-kit.jpg", alt: "The CloudTech Corporate Kit in its navy gift box" },
+      { src: "/products/collection-flatlay.jpg", alt: "The pieces of the CloudTech Collection" },
+    ],
+    sizes: [...SIZES, "Mixed sizes (team order)"],
+    badge: "Corporate Kit",
     available: true,
-    featured: false,
-  },
-
-  // The Academy Collection: shown as Coming Soon until `available` is set to true.
-  {
-    id: "ac-tee",
-    slug: "academy-tee",
-    name: "Academy Tee",
-    line: "academy",
-    category: "apparel",
-    tagline: "DATA PEOPLE on a deep-blue tee.",
-    description: "For CloudTech Academy learners and the data community: a deep-blue tee with DATA PEOPLE and Learn. Build. Prove It.",
-    details: ["Deep-blue cotton jersey", "DATA PEOPLE front print"],
-    price: null,
-    images: [{ mockup: "tee", palette: "academy", view: "academy", alt: "Academy Tee with DATA PEOPLE print" }],
-    sizes: APPAREL_SIZES,
-    available: false,
-    featured: false,
-  },
-  {
-    id: "ac-hoodie",
-    slug: "academy-hoodie",
-    name: "Academy Hoodie",
-    line: "academy",
-    category: "apparel",
-    tagline: "The study-session hoodie.",
-    description: "A heavyweight deep-blue hoodie with DATA PEOPLE across the chest, for late study sessions and community meet-ups.",
-    details: ["Heavyweight brushed fleece", "DATA PEOPLE front print", "Gold-tipped drawcords"],
-    price: null,
-    images: [{ mockup: "hoodie", palette: "academy", alt: "Academy Hoodie with DATA PEOPLE print" }],
-    sizes: APPAREL_SIZES,
-    available: false,
-    featured: false,
-  },
-  {
-    id: "ac-notebook",
-    slug: "academy-notebook",
-    name: "Academy Notebook",
-    line: "academy",
-    category: "stationery",
-    tagline: "Learn. Build. Prove It.",
-    description: "A deep-blue notebook for course notes, SQL scribbles and project plans.",
-    details: ["A5 softcover", "Dotted pages"],
-    price: null,
-    images: [{ mockup: "journal", palette: "academy", alt: "Academy Notebook" }],
-    available: false,
-    featured: false,
-  },
-  {
-    id: "ac-cap",
-    slug: "academy-cap",
-    name: "Academy Cap",
-    line: "academy",
-    category: "accessories",
-    tagline: "Deep-blue cap with the CloudTech mark.",
-    description: "A relaxed deep-blue cap with the CloudTech mark.",
-    details: ["Unstructured cotton twill", "Embroidered mark"],
-    price: null,
-    images: [{ mockup: "cap", palette: "academy", view: "side", alt: "Academy Cap" }],
-    available: false,
-    featured: false,
-  },
-  {
-    id: "ac-stickers",
-    slug: "data-people-stickers",
-    name: "Data People Stickers",
-    line: "academy",
-    category: "accessories",
-    tagline: "For laptops and water bottles.",
-    description: "A sheet of vinyl stickers: DATA PEOPLE, the CloudTech mark, Learn. Build. Prove It., and a little SQL.",
-    details: ["Matte vinyl, weatherproof"],
-    price: null,
-    images: [{ mockup: "stickers", alt: "Data People sticker set" }],
-    available: false,
-    featured: false,
-  },
-  {
-    id: "ac-tote",
-    slug: "academy-tote",
-    name: "Academy Tote",
-    line: "academy",
-    category: "accessories",
-    tagline: "For Data People.",
-    description: "A natural canvas tote printed with For Data People.",
-    details: ["Heavy natural canvas", "Navy and gold print"],
-    price: null,
-    images: [{ mockup: "tote", alt: "Academy Tote bag" }],
-    available: false,
-    featured: false,
+    featured: true,
   },
 ];
 
+export const CATEGORIES = ["All", "Apparel", "Stationery", "Accessories", "Kits"] as const;
+
 export const findProduct = (slug: string) => PRODUCTS.find((p) => p.slug === slug);
-export const SIGNATURE = PRODUCTS.filter((p) => p.line === "signature");
-export const ORDERABLE = PRODUCTS.filter((p) => p.available);
-export const ACADEMY = PRODUCTS.filter((p) => p.line === "academy");
 
 export const formatPrice = (price: number | null) => (price === null ? "Price on request" : `₦${price.toLocaleString("en-NG")}`);
 
-/** What can be requested in a corporate order. */
+export type AcademyItem = { id: string; name: string; category: string; description: string; tagline: string; icon: "Terminal" | "Code" | "BookOpen" | "Compass" | "Sparkles" | "ShoppingBag" };
+
+export const ACADEMY_ITEMS: AcademyItem[] = [
+  { id: "acad-tee", name: "Learn. Build. Prove It. Tee", category: "Apparel", description: "A relaxed tee carrying the line that runs through every CloudTech Academy course.", tagline: "Learn. Build. Prove It.", icon: "Terminal" },
+  { id: "acad-hoodie", name: "Data People Hoodie", category: "Apparel", description: "A heavyweight hoodie for late study sessions, project sprints and community meet-ups.", tagline: "Built for late-night queries.", icon: "Code" },
+  { id: "acad-notebook", name: "Data Notebook", category: "Stationery", description: "Grid pages for sketching tables, joins, dashboards and project plans.", tagline: "Schema before code.", icon: "BookOpen" },
+  { id: "acad-cap", name: "Academy Cap", category: "Accessories", description: "A relaxed cap with the CloudTech mark, for campus and tech events.", tagline: "Everyday uniform.", icon: "Compass" },
+  { id: "acad-stickers", name: "Data People Stickers", category: "Accessories", description: "Matte vinyl stickers for laptops and bottles: DATA PEOPLE, the CloudTech mark and a little SQL.", tagline: "SELECT * FROM ideas;", icon: "Sparkles" },
+  { id: "acad-tote", name: "Academy Tote", category: "Accessories", description: "A sturdy canvas tote with room for a laptop, charger, notebook and bottle.", tagline: "Carry your stack.", icon: "ShoppingBag" },
+];
+
 export const CORPORATE_OPTIONS = [
-  "Signature Polos",
+  "Signature Polos (10+)",
   "Event T-shirts",
-  "Caps",
-  "Branded notebooks / journals",
-  "Pens",
-  "Bottles and mugs",
-  "Lanyards and ID cards",
+  "Executive Caps",
+  "Hardcover Journals",
+  "Executive Pens",
+  "Thermal Bottles",
   "Corporate Kits (boxed)",
-  "Corporate gift boxes",
-  "Customised merchandise",
+  "Lanyards and ID cards",
   "Academy / student kits",
+  "Customised or co-branded items",
+];
+
+export const FAQ = [
+  {
+    q: "How do orders work if I don't pay online?",
+    a: "Add pieces to your Order Request list or request a single item, and send it. You'll get a reference straight away. We then contact you by email or WhatsApp to confirm availability, the final price, payment and delivery. Nothing is charged until you agree.",
+  },
+  {
+    q: "Can we order for a team, an event or as client gifts?",
+    a: "Yes. Use the Corporate Orders form for bulk polos, event T-shirts, journals, Corporate Kits and gift boxes. Tell us about names for ID cards, an event logo or co-branding, and we'll reply with options and a quotation.",
+  },
+  {
+    q: "Where do you deliver, and how long does it take?",
+    a: "We deliver within Nigeria and can arrange delivery further afield. Timing depends on the items, the quantity and your location, so we confirm it with you before you pay.",
+  },
+  {
+    q: "How do sizes run?",
+    a: "The Signature Polo and Essential Tee come in standard sizes from S. If you're between sizes, size up for a relaxed fit, or ask us when we contact you to confirm your order.",
+  },
 ];
